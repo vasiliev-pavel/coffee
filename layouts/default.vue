@@ -1,5 +1,5 @@
 <template>
-  <header class="container mx-auto">
+  <header class="container mx-auto px-4 sm:px-6 md:px-8">
     <NavBar />
   </header>
   <main class="container mx-auto px-4 sm:px-6 md:px-8">

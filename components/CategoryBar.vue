@@ -7,7 +7,11 @@
       v-for="category in categories"
       :key="category.hash"
       :to="{ path: '/', hash: category.hash }"
-      @click="centerCategory($event)"
+      @click="centerCategory($event, category.hash)"
+      :class="{
+        'is-active': category.isActive,
+        'is-inactive': !category.isActive,
+      }"
       >{{ category.name }}</NuxtLink
     >
   </div>
@@ -17,26 +21,27 @@
 import { ref } from "vue";
 
 const categories = ref([
-  { name: "Hot Chocolate", hash: "#hot_chocolate" },
-  { name: "Hot Coffee", hash: "#hot_coffee" },
-  { name: "Cold Coffee", hash: "#cold_coffee" },
-  { name: "Tea", hash: "#tea" },
-  { name: "Snacks", hash: "#snacks" },
-  { name: "Bakery", hash: "#bakery" },
+  { name: "Hot Chocolate", hash: "#hot_chocolate", isActive: false },
+  { name: "Hot Coffee", hash: "#hot_coffee", isActive: false },
+  { name: "Cold Coffee", hash: "#cold_coffee", isActive: false },
+  { name: "Tea", hash: "#tea", isActive: false },
+  { name: "Snacks", hash: "#snacks", isActive: false },
+  { name: "Bakery", hash: "#bakery", isActive: false },
 ]);
 
 const categoryBar = ref(null);
 
-const centerCategory = (event) => {
-  const clickedElement = event.currentTarget;
+const centerCategory = (event, categoryHash) => {
+  categories.value.forEach((category) => {
+    category.isActive = category.hash === categoryHash;
+  });
 
-  // Вычисляем необходимый сдвиг для центрирования
+  const clickedElement = event.currentTarget;
   const scrollAmount =
     clickedElement.offsetLeft -
     categoryBar.value.offsetWidth / 2 +
     clickedElement.offsetWidth / 2;
 
-  // Прокручиваем к элементу
   categoryBar.value.scroll({
     left: scrollAmount,
     behavior: "smooth",
@@ -72,6 +77,12 @@ const centerCategory = (event) => {
   text-align: center;
 }
 
-@media screen {
+.category-bar > a.is-active {
+  font-weight: bold;
+  color: #ffffff; /* Белый цвет для активного элемента */
+}
+
+.category-bar > a.is-inactive {
+  color: #a5a5a5; /* Светло-серый цвет для неактивных элементов */
 }
 </style>

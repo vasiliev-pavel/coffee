@@ -16,7 +16,7 @@
     align-items: center;
 
     font-weight: bold;
-    padding: 15px 20px;
+    padding: 15px 0;
   }
 }
 </style>

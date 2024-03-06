@@ -12,7 +12,7 @@
         class="item rounded-lg overflow-hidden"
       >
         <template v-if="item.id === 1">
-          <div class="video-container relative w-full h-full min-h-[500px]">
+          <div class="video-container relative w-full h-full min-h-[50vh]">
             <video
               autoplay
               muted
