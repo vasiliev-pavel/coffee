@@ -31,7 +31,7 @@ export default {
         },
         {
           id: 2,
-          name: "Hot Chocolate 2",
+          name: "Hot Chocolate 3",
           price: 12.99,
           photo: "hot_coffee.png",
         },
