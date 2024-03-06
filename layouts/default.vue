@@ -1,12 +1,18 @@
 <template>
-    <main class="container mx-auto text-white">
+    <header class="container mx-auto">
+        <NavBar />
+    </header>
+    <main class="container mx-auto">
         <slot />
     </main>
 </template>
 
 <style>
 html {
-    background-color: #0a246b;
+    background-color: #E8E8E8;
+}
 
+main {
+    height: 300vh;
 }
 </style>

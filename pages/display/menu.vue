@@ -1,3 +1,3 @@
 <template>
-    <h1>Цифровое Меню</h1>
+    <h1>Digital Menu</h1>
 </template>
