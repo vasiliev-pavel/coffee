@@ -9,11 +9,34 @@
         :to="`/${item.id}`"
         v-for="item in items"
         :key="item.id"
-        class="item rounded-lg p-6"
+        class="item rounded-lg overflow-hidden"
       >
-        <img :src="item.photo" :alt="item.name" />
-        <h3>{{ item.name }}</h3>
-        <p>${{ item.price }}</p>
+        <template v-if="item.id === 1">
+          <div class="video-container relative w-full h-full">
+            <video
+              autoplay
+              muted
+              loop
+              playsinline
+              class="absolute top-0 left-0 w-full h-full object-cover"
+              :src="item.videoSrc"
+              :alt="item.name"
+            ></video>
+            <div
+              class="video-info absolute bottom-0 p-6 bg-black bg-opacity-50 w-full"
+            >
+              <h3 class="text-white">{{ item.name }}</h3>
+              <p class="text-white">${{ item.price }}</p>
+            </div>
+          </div>
+        </template>
+        <template v-else>
+          <div class="flex flex-col p-6">
+            <img :src="item.photo" :alt="item.name" class="w-full h-auto" />
+            <h3>{{ item.name }}</h3>
+            <p>${{ item.price }}</p>
+          </div>
+        </template>
       </NuxtLink>
     </div>
   </section>

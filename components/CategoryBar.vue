@@ -22,7 +22,7 @@ const categories = ref([
   { name: "Cold Coffee", hash: "#cold_coffee" },
   { name: "Tea", hash: "#tea" },
   { name: "Snacks", hash: "#snacks" },
-  { name: "Backery", hash: "#backery" },
+  { name: "Bakery", hash: "#bakery" },
 ]);
 
 const categoryBar = ref(null);

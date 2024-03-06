@@ -26,6 +26,7 @@ export default {
           name: "Hot Chocolate 1",
           price: 10.99,
           photo: "hot_coffee.png",
+          videoSrc: "cappucino.mp4",
         },
         {
           id: 2,
@@ -82,6 +83,7 @@ export default {
           name: "Cold Coffee 1",
           price: 10.99,
           photo: "cold_coffee.png",
+          videoSrc: "Ice_Latte.mp4",
         },
         {
           id: 2,
@@ -120,6 +122,46 @@ export default {
           name: "Dessert Coffee 1",
           price: 10.99,
           photo: "dessert_coffee.png",
+          videoSrc: "lemon_tart.mp4",
+        },
+        {
+          id: 2,
+          name: "Dessert Coffee 2",
+          price: 12.99,
+          photo: "dessert_coffee.png",
+        },
+        {
+          id: 3,
+          name: "Dessert Coffee 3",
+          price: 12.99,
+          photo: "dessert_coffee.png",
+        },
+        {
+          id: 4,
+          name: "Dessert Coffee 4",
+          price: 12.99,
+          photo: "dessert_coffee.png",
+        },
+        {
+          id: 5,
+          name: "Dessert Coffee 5",
+          price: 12.99,
+          photo: "dessert_coffee.png",
+        },
+        {
+          id: 6,
+          name: "Dessert Coffee 6",
+          price: 12.99,
+          photo: "dessert_coffee.png",
+        },
+      ],
+      bakery: [
+        {
+          id: 1,
+          name: "Dessert Coffee 1",
+          price: 10.99,
+          photo: "dessert_coffee.png",
+          videoSrc: "bakery.mp4",
         },
         {
           id: 2,
