@@ -2,10 +2,21 @@
   <header class="container mx-auto">
     <NavBar />
   </header>
-  <main class="container mx-auto">
+  <main class="container mx-auto px-4 sm:px-6 md:px-8">
     <slot />
   </main>
 </template>
+<script setup>
+useHead({
+  meta: [
+    {
+      name: "viewport",
+      content:
+        "width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no",
+    },
+  ],
+});
+</script>
 
 <style>
 html {

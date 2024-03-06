@@ -1,6 +1,6 @@
 <template>
   <div
-    class="category-bar flex sticky top-2 left-0 right-0 z-50 rounded"
+    class="category-bar flex md:sticky md:top-2 lg:sticky lg:top-2 left-0 right-0 z-50 md:rounded lg:rounded fixed bottom-0 top-auto"
     ref="categoryBar"
   >
     <NuxtLink
@@ -70,5 +70,8 @@ const centerCategory = (event) => {
   padding: 0 20px;
   flex-grow: 1;
   text-align: center;
+}
+
+@media screen {
 }
 </style>

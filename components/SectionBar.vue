@@ -1,5 +1,5 @@
 <template>
-  <div :id="id" class="target"></div>
+  <div :id="id" class="target md:h-[3.5rem] lg:h-[3.5rem]"></div>
   <section class="section-bar">
     <h2 class="text-3xl">{{ category }}</h2>
     <div
@@ -40,9 +40,6 @@ export default {
 </script>
 
 <style>
-.target {
-  height: 3.5rem;
-}
 .section-bar {
   display: flex;
   flex-direction: column;
