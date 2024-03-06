@@ -13,6 +13,7 @@
       :items="cold_coffee"
     />
     <SectionBar id="tea" category="Tea" :items="tea" />
+    <SectionBar id="bakery" category="Bakery" :items="bakery" />
   </div>
 </template>
 
@@ -26,7 +27,7 @@ export default {
           name: "Hot Chocolate 1",
           price: 10.99,
           photo: "hot_coffee.png",
-          videoSrc: "cappucino.mp4",
+          videoSrc: "./cappucino.mp4",
         },
         {
           id: 2,
@@ -83,7 +84,7 @@ export default {
           name: "Cold Coffee 1",
           price: 10.99,
           photo: "cold_coffee.png",
-          videoSrc: "Ice_Latte.mp4",
+          videoSrc: "./Ice_Latte.mp4",
         },
         {
           id: 2,
@@ -122,7 +123,7 @@ export default {
           name: "Dessert Coffee 1",
           price: 10.99,
           photo: "dessert_coffee.png",
-          videoSrc: "lemon_tart.mp4",
+          videoSrc: "./lemon_tart.mp4",
         },
         {
           id: 2,
@@ -161,7 +162,7 @@ export default {
           name: "Dessert Coffee 1",
           price: 10.99,
           photo: "dessert_coffee.png",
-          videoSrc: "bakery.mp4",
+          videoSrc: "./bakery.mp4",
         },
         {
           id: 2,
