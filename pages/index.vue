@@ -27,7 +27,7 @@ export default {
           name: "Hot Chocolate 1",
           price: 10.99,
           photo: "hot_coffee.png",
-          videoSrc: "./cappucino.mp4",
+          videoSrc: "./live.mp4",
         },
         {
           id: 2,
