@@ -1,63 +1,74 @@
 <template>
-    <section :id="id" class="section-bar">
-        <h2 class="text-3xl">{{ category }}</h2>
-        <div class="section-items grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            <NuxtLink :to="`/${item.id}`" v-for="item in items" :key="item.id" class="item rounded-lg p-6">
-                <img :src="item.photo" :alt="item.name" />
-                <h3>{{ item.name }}</h3>
-                <p>${{ item.price }}</p>
-            </NuxtLink>
-        </div>
-    </section>
+  <div :id="id" class="target"></div>
+  <section class="section-bar">
+    <h2 class="text-3xl">{{ category }}</h2>
+    <div
+      class="section-items grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6"
+    >
+      <NuxtLink
+        :to="`/${item.id}`"
+        v-for="item in items"
+        :key="item.id"
+        class="item rounded-lg p-6"
+      >
+        <img :src="item.photo" :alt="item.name" />
+        <h3>{{ item.name }}</h3>
+        <p>${{ item.price }}</p>
+      </NuxtLink>
+    </div>
+  </section>
 </template>
 
 <script>
 export default {
-    name: 'SectionBar',
-    props: {
-        items: {
-            type: Array,
-            default: () => []
-        },
-        id: {
-            type: [String, Number],
-            default: ''
-        },
-        category: {
-            type: [String, Number],
-            default: ''
-        }
+  name: "SectionBar",
+  props: {
+    items: {
+      type: Array,
+      default: () => [],
     },
-}
+    id: {
+      type: [String, Number],
+      default: "",
+    },
+    category: {
+      type: [String, Number],
+      default: "",
+    },
+  },
+};
 </script>
 
 <style>
+.target {
+  height: 3.5rem;
+}
 .section-bar {
-    display: flex;
-    flex-direction: column;
-    font-weight: bold;
+  display: flex;
+  flex-direction: column;
+  font-weight: bold;
 
-    &>h2 {
-        display: flex;
-        padding: 15px 0;
-    }
+  & > h2 {
+    display: flex;
+    padding: 15px 0;
+  }
 }
 
 .section-items .item {
-    display: flex;
-    flex-direction: column;
-    background-color: #fff;
-    grid-column: span 1;
-    grid-row: span 1;
+  display: flex;
+  flex-direction: column;
+  background-color: #fff;
+  grid-column: span 1;
+  grid-row: span 1;
 }
 
 .section-items .item.row-span-2.col-span-2 {
-    grid-column: span 2;
-    grid-row: span 2;
+  grid-column: span 2;
+  grid-row: span 2;
 }
 
 .section-items .item:first-child {
-    grid-column: span 2;
-    grid-row: span 2;
+  grid-column: span 2;
+  grid-row: span 2;
 }
 </style>
