@@ -1,18 +1,3 @@
-export const cups = [
-    {
-        volume: "8 oz",
-        size: 'S'
-    },
-    {
-        volume: "12 oz",
-        size: 'M'
-    },
-    {
-        volume: "16 oz",
-        size: 'L'
-    },
-];
-
 export const extras = [
     { name: "Cup", isActive: false, subCategories: ["Small", "Medium", "Large"] },
     { name: "Lid", isActive: false, subCategories: ["Standard", "Sip Through", "None"] },
