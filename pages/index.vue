@@ -1,5 +1,6 @@
 <template>
   <div class="main">
+    <ButtonCart />
     <CategoryBar />
     <SectionBar id="hot_coffee" category="Hot Coffee" :items="hot_coffee" />
     <SectionBar id="cold_coffee" category="Cold Coffee" :items="cold_coffee" />

@@ -1,15 +1,11 @@
 <template>
-    <ItemBar :item="item" />
+    <CardBar :item="item" />
 </template>
 
 <script>
 import { data } from "~/mock.ts";
-import ItemBar from "~/components/ItemBar.vue"
 
 export default {
-    components: {
-        ItemBar,
-    },
     data() {
         return {
             item: null,
