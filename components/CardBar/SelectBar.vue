@@ -8,7 +8,48 @@
             </div>
         </div>
         <div class="select-items-bar">
-            <div></div>
+            <div class="select-item rounded-lg">
+                <img src="/coffee.png" />
+                <span>wow</span>
+            </div>
+            <div class="select-item rounded-lg">
+                <img src="/coffee.png" />
+                <span>wow</span>
+            </div>
+
+            <div class="select-item rounded-lg">
+                <img src="/coffee.png" />
+                <span>wow</span>
+            </div>
+            <div class="select-item rounded-lg">
+                <img src="/coffee.png" />
+                <span>wow</span>
+            </div>
+            <div class="select-item rounded-lg">
+                <img src="/coffee.png" />
+                <span>wow</span>
+            </div>
+            <div class="select-item rounded-lg">
+                <img src="/coffee.png" />
+                <span>wow</span>
+            </div>
+            <div class="select-item rounded-lg">
+                <img src="/coffee.png" />
+                <span>wow</span>
+            </div>
+            <div class="select-item rounded-lg">
+                <img src="/coffee.png" />
+                <span>wow</span>
+            </div>
+            <div class="select-item rounded-lg">
+                <img src="/coffee.png" />
+                <span>wow</span>
+            </div>
+            <div class="select-item rounded-lg">
+                <img src="/coffee.png" />
+                <span>wow</span>
+            </div>
+
         </div>
     </div>
 </template>
@@ -116,12 +157,12 @@ onMounted(() => {
     grid-column: span 3;
     background-color: #fff;
     overflow: hidden;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }
 
 .select-category-bar {
     display: grid;
     grid-row: span 1;
-    background-color: blue;
     height: 100%;
 
 
@@ -140,7 +181,6 @@ onMounted(() => {
             display: flex;
             justify-content: flex-end;
             align-items: center;
-            color: #fff;
             font-weight: bold;
             padding: 0 20px;
             flex-grow: 1;
@@ -154,6 +194,44 @@ onMounted(() => {
 .select-items-bar {
     display: grid;
     grid-row: span 4;
-    background-color: red;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    align-items: center;
+
+    overflow: auto;
+    scrollbar-width: none;
+
+    &>.select-item {
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        width: 20%;
+        padding: 15px;
+        margin: 15px;
+        transition: 0.5s all;
+        cursor: pointer;
+
+        &:hover {
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        &>img {
+            height: 80%;
+        }
+
+        &>span {
+            height: 20%;
+        }
+    }
+}
+
+@media (max-width: 768px) {
+    .select-bar {
+        min-height: 45vh !important;
+        max-height: 45vh !important;
+    }
 }
 </style>

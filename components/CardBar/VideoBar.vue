@@ -1,25 +1,14 @@
 <template>
-    <div class="video-bar rounded-lg">
-
-        <template v-if="item.videoSrc">
-            <div class="relative w-full h-full min-h-[50vh]">
-                <video autoplay muted loop playsinline class="absolute top-0 left-0 w-full h-full object-cover "
-                    :src="item.videoSrc" :alt="item.name"></video>
-                <div class="video-info absolute bottom-0 p-6 bg-black bg-opacity-50 w-full">
-                    <h3 class="text-white">{{ item.name }}</h3>
-                    <p class="text-white">${{ item.price }}</p>
-                </div>
-            </div>
-        </template>
-
-        <template v-else>
-            <div class="flex flex-col p-6">
-                <img :src="item.photo" :alt="item.name" class="w-full h-auto" />
-                <h3>{{ item.name }}</h3>
-                <p>${{ item.price }}</p>
-            </div>
-        </template>
-
+    <div class="video-bar rounded-lg relative w-full h-full">
+        <video v-if="item.videoSrc" autoplay muted loop playsinline
+            class="absolute top-0 left-0 w-full h-full object-cover" :alt="item.name">
+            <source :src="item.videoSrc" type="video/mp4">
+        </video>
+        <img v-if="!item.videoSrc" :src="item.photo" :alt="item.name" class="w-full h-auto" />
+        <div class="video-description-bar">
+            <h3>{{ item.name }}</h3>
+            <p>${{ item.price }}</p>
+        </div>
     </div>
 </template>
 <script setup>
@@ -32,5 +21,29 @@ const props = defineProps({
     display: grid;
     grid-column: span 2;
     overflow: hidden;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+
+    &>.video-description-bar {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        color: #fff;
+        font-weight: bold;
+        background-color: rgba(0, 0, 0, 0.25);
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: 20%;
+        z-index: 5;
+    }
+}
+
+@media (max-width: 768px) {
+    .video-bar {
+        min-height: 40vh !important;
+        max-height: 40vh !important;
+    }
 }
 </style>
