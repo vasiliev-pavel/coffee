@@ -1,5 +1,5 @@
 <template>
-    <div class="card-bar grid grid-cols-5 gap-10">
+    <div class="card-bar grid grid-cols-5 gap-4">
         <CardBarVideoBar class=" min-h-[85vh] max-h-[85vh]" :item="item" />
         <CardBarSelectBar class="min-h-[85vh] max-h-[85vh]" :item="item" />
     </div>
