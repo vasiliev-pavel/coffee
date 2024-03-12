@@ -230,8 +230,8 @@ onMounted(() => {
 
 @media (max-width: 768px) {
     .select-bar {
-        min-height: 45vh !important;
-        max-height: 45vh !important;
+        min-height: 40vh !important;
+        max-height: 40vh !important;
     }
 }
 </style>
