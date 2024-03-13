@@ -2,29 +2,14 @@
   <div :id="id" class="target md:h-[3.5rem] lg:h-[3.5rem]"></div>
   <section class="section-bar">
     <h2 class="text-3xl">{{ category }}</h2>
-    <div
-      class="section-items grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6"
-    >
-      <NuxtLink
-        :to="`/${item.id}`"
-        v-for="(item, index) in items"
-        :key="item.id"
-        class="item rounded-lg overflow-hidden"
-      >
+    <div class="section-items grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6">
+      <NuxtLink :to="`/${item.id}`" v-for="(item, index) in items" :key="item.id"
+        class="item rounded-lg overflow-hidden">
         <template v-if="index === 0">
           <div class="video-container relative w-full h-full min-h-[50vh]">
-            <video
-              autoplay
-              muted
-              loop
-              playsinline
-              class="absolute top-0 left-0 w-full h-full object-cover"
-              :src="item.videoSrc"
-              :alt="item.name"
-            ></video>
-            <div
-              class="video-info absolute bottom-0 p-6 bg-black bg-opacity-50 w-full"
-            >
+            <video autoplay muted loop playsinline class="absolute top-0 left-0 w-full h-full object-cover"
+              :src="item.videoSrc" :alt="item.name"></video>
+            <div class="video-info absolute bottom-0 p-6 bg-black bg-opacity-50 w-full">
               <h3 class="text-white">{{ item.name }}</h3>
               <p class="text-white">${{ item.price }}</p>
             </div>
@@ -69,7 +54,7 @@ export default {
   flex-direction: column;
   font-weight: bold;
 
-  & > h2 {
+  &>h2 {
     display: flex;
     padding: 15px 0;
   }
@@ -79,6 +64,21 @@ export default {
   display: flex;
   flex-direction: column;
   background-color: #fff;
+  box-shadow: rgba(6, 5, 50, 0.15) 0px 4px 22px -6px;
+  transition: 0.3s all;
+
+  img {
+    transition: 0.5s all;
+  }
+
+  &:hover {
+    box-shadow: rgba(6, 5, 50, 0.15) 0px 0px 12px -4px;
+
+    img {
+      transform: scale(1.1);
+    }
+  }
+
   grid-column: span 1;
   grid-row: span 1;
 }

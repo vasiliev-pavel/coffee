@@ -7,14 +7,22 @@
         <img v-if="!item.videoSrc" :src="item.photo" :alt="item.name" class="w-full h-auto" />
         <div class="video-description-bar">
             <h3>{{ item.name }}</h3>
-            <p>${{ item.price }}</p>
+            <button @click="addToCart">Add ${{ item.price }}</button>
         </div>
     </div>
 </template>
 <script setup>
+import { defineProps } from 'vue';
+
 const props = defineProps({
     item: Object,
 });
+
+const cartStore = useCartStore();
+
+const addToCart = () => {
+    cartStore.addItem(props.item.id, props.item.price, 1, props.item.size, {});
+};
 </script>
 <style>
 .video-bar {
