@@ -89,6 +89,21 @@ export default {
   display: flex;
   flex-direction: column;
   background-color: #fff;
+  box-shadow: rgba(6, 5, 50, 0.15) 0px 4px 22px -6px;
+  transition: 0.3s all;
+
+  img {
+    transition: 0.5s all;
+  }
+
+  &:hover {
+    box-shadow: rgba(6, 5, 50, 0.15) 0px 0px 12px -4px;
+
+    img {
+      transform: scale(1.1);
+    }
+  }
+
   grid-column: span 1;
   grid-row: span 1;
 }

@@ -4,6 +4,7 @@
   </header>
   <main class="container mx-auto px-4">
     <slot />
+    <ButtonCart />
   </main>
 </template>
 <script setup>
@@ -20,7 +21,8 @@ useHead({
 
 <style>
 html {
-  background-color: #e8e8e8;
+  /* background-color: #e8e8e8;*/
+  background-color: #f3f4f6;
   scroll-behavior: smooth;
 }
 </style>
