@@ -2,7 +2,11 @@
 export default {
   content: [],
   theme: {
-    extend: {},
+    extend: {
+      backgroundImage: theme => ({
+        'custom-gradient': 'linear-gradient(to bottom, transparent, #e8e8e880, #e8e8e8cc, #e8e8e8)',
+      }),
+    },
   },
   plugins: [],
 }

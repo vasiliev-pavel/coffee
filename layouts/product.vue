@@ -1,10 +1,5 @@
 <template>
-  <header class="container mx-auto px-4">
-    <NavBar />
-  </header>
-  <main class="container mx-auto px-4">
-    <slot />
-  </main>
+  <div><slot /></div>
 </template>
 <script setup>
 useHead({

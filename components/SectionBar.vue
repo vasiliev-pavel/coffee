@@ -22,11 +22,17 @@
               :src="item.videoSrc"
               :alt="item.name"
             ></video>
-            <div
-              class="video-info absolute bottom-0 p-6 bg-black bg-opacity-50 w-full"
-            >
-              <h3 class="text-white">{{ item.name }}</h3>
-              <p class="text-white">${{ item.price }}</p>
+            <div class="video-info absolute bottom-0 p-6 w-full">
+              <div class="flex items-center">
+                <button
+                  class="bg-blue-500 hover:bg-blue-700 text-white font-bold p-4 rounded-full"
+                >
+                  <PlusIcon />
+                </button>
+                <h3 class="flex text-white font-medium text-3xl ml-5">
+                  ${{ item.price }}
+                </h3>
+              </div>
             </div>
           </div>
         </template>
@@ -44,7 +50,11 @@
 </template>
 
 <script>
+import PlusIcon from "~/components/icons/PlusIcon.vue";
 export default {
+  components: {
+    PlusIcon,
+  },
   name: "SectionBar",
   props: {
     items: {

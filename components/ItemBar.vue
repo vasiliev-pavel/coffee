@@ -1,35 +1,38 @@
 <template>
-  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
-    <template v-if="item.videoSrc">
-      <div class="video-container relative w-full h-full min-h-[50vh]">
-        <video
-          autoplay
-          muted
-          loop
-          playsinline
-          class="absolute top-0 left-0 w-full h-full object-cover rounded-[2rem]"
-          :src="item.videoSrc"
-          :alt="item.name"
-        ></video>
-        <div
-          class="video-info absolute bottom-0 p-6 bg-black bg-opacity-50 w-full"
-        >
-          <h3 class="text-white">{{ item.name }}</h3>
-          <p class="text-white">${{ item.price }}</p>
+  <div
+    class="mt-[20rem] grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-6 min-h-96"
+  >
+    <div class="">
+      <template v-if="item.videoSrc">
+        <div class="video-container relative w-full h-full">
+          <video
+            autoplay
+            muted
+            loop
+            playsinline
+            class="absolute top-0 left-0 w-full h-full object-cover rounded-[2rem]"
+            :src="item.videoSrc"
+            :alt="item.name"
+          ></video>
+          <div
+            class="video-info absolute bottom-0 p-6 bg-black bg-opacity-50 w-full"
+          >
+            <h3 class="text-white">{{ item.name }}</h3>
+            <p class="text-white">${{ item.price }}</p>
+          </div>
         </div>
-      </div>
-    </template>
+      </template>
 
-    <template v-else>
-      <div class="flex flex-col p-6">
-        <img :src="item.photo" :alt="item.name" class="w-full h-auto" />
-        <h3>{{ item.name }}</h3>
-        <p>${{ item.price }}</p>
-      </div>
-    </template>
-
+      <template v-else>
+        <div class="flex flex-col p-6">
+          <img :src="item.photo" :alt="item.name" class="w-full h-auto" />
+          <h3>{{ item.name }}</h3>
+          <p>${{ item.price }}</p>
+        </div>
+      </template>
+    </div>
     <div
-      class="extra-container bg-[#F3F3F3] md:bg-transparent shadow-md md:shadow-none rounded-b-[3rem] md:rounded-none"
+      class="col-span-2 grid-rows-5 bg-[#F3F3F3] md:bg-transparent shadow-md md:shadow-none rounded-b-[3rem] md:rounded-none"
       :class="{ 'is-visible': isExtraContainerVisible }"
     >
       <SubcategoryBar
@@ -42,7 +45,7 @@
         :visible="true"
       />
 
-      <div class="extra-bar" ref="extraBar">
+      <div class="row-span-1" ref="extraBar">
         <div class="extra-bar-inner" ref="extraBarInner">
           <div
             v-for="category in categories"
@@ -227,20 +230,23 @@ onMounted(() => {
 }
 
 .extra-container {
+  position: relative; /* Делает extra-container родительским контейнером для абсолютного позиционирования */
+  background-color: #f3f3f3;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 0 0 3rem 3rem; /* Скругление нижних углов */
+  min-height: 60vh;
+  max-height: 60vh;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  /* Центрирует содержимое по вертикали */
-  align-items: center;
-  /* Центрирует содержимое по горизонтали */
-  text-align: center;
-  /* Убедитесь, что текст внутри дочерних элементов также центрирован */
+  justify-content: space-between; /* Распределяет дочерние элементы по всей высоте контейнера */
 }
 
 .extra-bar {
-  width: 100%;
-  overflow: hidden;
-  z-index: 15;
+  position: absolute;
+  bottom: 0; /* Прижимаем к нижней части extra-container */
+  left: 0;
+  width: 100%; /* Заставляет extra-bar заполнять всю ширину extra-container */
+  z-index: 15; /* Убедитесь, что extra-bar отображается поверх других элементов */
 }
 
 .extra-bar::-webkit-scrollbar {
