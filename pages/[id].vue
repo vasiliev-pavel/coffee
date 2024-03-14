@@ -4,7 +4,7 @@
       <!-- Левая часть -->
       <div class="col-span-1 h-[60vh] relative">
         <CloseIcon
-          @click="$router.back()"
+          @click=""
           class="absolute top-0 right-0 m-5 z-10 hover:scale-110 active:scale-95 transition duration-150 ease-in-out"
         />
         <section>
@@ -70,7 +70,7 @@
               class="category-item"
             >
               <CupIcon class="category-icon" />
-              <div class="category-name">{{ category.name }}</div>
+              <div class="category-name">{{ category.displayName }}</div>
             </div>
           </div>
         </div>
@@ -88,6 +88,8 @@
             currentCategory.subCategories.length > 0
           "
           :currentCategory="currentCategory"
+          @update:selectedSubCategories="handleSelectedSubCategories"
+          @update:categoryName="handleCategoryNameChange"
         />
       </div>
 
@@ -117,13 +119,18 @@ import {
 
 import { data } from "~/mock.ts";
 
+const cartStore = useCart2Store(); // Используем Pinia store
+const activeCategoryName = ref(""); // Хранилище для активного названия категории
+const selectedSubcategories = ref([]); // Хранилище для выбранных подкатегорий
+const categoryStates = ref({});
+
 const route = useRoute();
 const router = useRouter();
-
 const item = computed(() => {
   const items = Object.values(data).flat();
   return items.find((item) => item.id === parseInt(route.params.id));
 });
+
 const selectedSize = ref();
 
 const handleSizeSelect = (size) => {
@@ -133,7 +140,9 @@ const handleSizeSelect = (size) => {
 const categories = ref(
   mockCategories.map((category) => ({
     ...category,
-    selectedSubcategories: [],
+    originalName: category.name,
+    displayName: category.name, // Это название будет обновляться
+    additionalCount: 0, // Инициализируем счётчик дополнительных выборов
   }))
 );
 
@@ -144,32 +153,98 @@ const isExtraContainerVisible = ref(false); // по умолчанию скры�
 // для скролла Options Bar
 const extraBarInner = ref(null);
 
+const updateCategoryState = (
+  categoryName,
+  selectedSubcategories,
+  activeName
+) => {
+  // Если выбранных подкатегорий нет, удаляем категорию из состояния
+  if (selectedSubcategories.length === 0) {
+    delete categoryStates.value[categoryName];
+  } else {
+    categoryStates.value[categoryName] = {
+      selectedSubcategories,
+      activeName,
+    };
+  }
+};
+
+// Функция для обработки изменения названия категории
+const handleCategoryNameChange = (newName) => {
+  if (currentCategory.value) {
+    // Обновляем состояние текущей категории
+    updateCategoryState(
+      currentCategory.value.name,
+      selectedSubcategories.value,
+      newName
+    );
+
+    // Непосредственно обновляем displayName в списке категорий
+    const categoryToUpdate = categories.value.find(
+      (c) => c.name === currentCategory.value.name
+    );
+    if (categoryToUpdate) {
+      categoryToUpdate.displayName = newName;
+    }
+
+    // Обновляем activeCategoryName для отображения в интерфейсе пользователя
+    activeCategoryName.value = newName;
+  }
+};
+
+const handleSelectedSubCategories = (subCategories) => {
+  selectedSubcategories.value = subCategories;
+  if (currentCategory.value) {
+    updateCategoryState(
+      currentCategory.value.name,
+      subCategories,
+      activeCategoryName.value
+    );
+  }
+};
+
+const increment = () => {
+  // Собираем все выбранные подкатегории, группируя их по категориям
+  const allSelectedExtras = Object.entries(categoryStates.value).reduce(
+    (acc, [categoryName, { selectedSubcategories }]) => {
+      // Если в категории есть выбранные подкатегории, добавляем их в аккумулятор
+      if (selectedSubcategories.length > 0) {
+        acc[categoryName] = selectedSubcategories.map(
+          (subcategory) => subcategory.name
+        );
+      }
+      return acc;
+    },
+    {}
+  );
+
+  const itemToAdd = {
+    ...item.value, // Базовая информация о товаре
+    size: selectedSize.value, // Выбранный размер
+    extras: allSelectedExtras, // Группированные выбранные дополнения по категориям
+    quantity: 1, // Количество
+  };
+
+  // Добавляем товар в корзину через Pinia store
+  cartStore.addItem(itemToAdd);
+};
+
 const selectCategory = (categoryName) => {
   const category = categories.value.find((c) => c.name === categoryName);
 
+  // Переключение видимости extra-container и обновление активных состояний
   if (currentCategory.value && currentCategory.value.name === categoryName) {
-    // Переключаем видимость extra-container
     isExtraContainerVisible.value = !isExtraContainerVisible.value;
-
-    // Если extra-container теперь скрыт, обнуляем текущую категорию
     if (!isExtraContainerVisible.value) {
       currentCategory.value = null;
-      // Также нужно обнулить активные состояния всех категорий
-      categories.value.forEach((cat) => {
-        cat.isActive = false;
-      });
+      categories.value.forEach((cat) => (cat.isActive = false));
     }
   } else {
     isExtraContainerVisible.value = true;
     currentCategory.value = category;
-
-    if (category) {
-      currentCategory.value = category;
-    }
-
-    categories.value.forEach((cat) => {
-      cat.isActive = cat.name === categoryName;
-    });
+    categories.value.forEach(
+      (cat) => (cat.isActive = cat.name === categoryName)
+    );
   }
 };
 
@@ -178,22 +253,6 @@ const handleWheelEvent = (event) => {
   const { deltaX, deltaY } = event;
   extraBarInner.value.scrollLeft += deltaY + deltaX;
   event.preventDefault(); // Предотвратить стандартное поведение прокрутки
-};
-
-const updateCategory = ({ categoryName, subCategory }) => {
-  const category = categories.value.find((c) => c.name === categoryName);
-  if (category) {
-    const index = category.selectedSubcategories.findIndex(
-      (sub) => sub === subCategory
-    );
-    if (index === -1) {
-      category.selectedSubcategories.push(subCategory);
-    } else {
-      category.selectedSubcategories.splice(index, 1);
-    }
-  }
-  // Можно скрыть подкатегории после выбора, если это требуется логикой приложения
-  // isSubcategoriesVisible.value = false;
 };
 
 onMounted(() => {
@@ -212,10 +271,6 @@ onMounted(() => {
     );
     extraBarInner.value.addEventListener("wheel", handleWheelEvent);
   }
-  // if (categories.value.length > 0) {
-  //   const firstCategoryName = categories.value[0].name;
-  //   selectCategory(firstCategoryName);
-  // }
 });
 </script>
 

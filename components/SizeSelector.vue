@@ -29,16 +29,20 @@ export default {
     sizes: {
       type: Array,
       default: () => [
-        { label: "S", volume: "250ml" },
-        { label: "M", volume: "500ml" },
-        { label: "L", volume: "750ml" },
+        { label: "S", volume: "250ml", price: 0 },
+        { label: "M", volume: "500ml", price: 1 },
+        { label: "L", volume: "750ml", price: 3 },
       ],
     },
   },
   data() {
     return {
-      selectedSize: this.sizes[1], // По умолчанию второй элемент
+      selectedSize: this.sizes[0],
     };
+  },
+  mounted() {
+    // Сразу после монтирования отправляем родительскому компоненту размер по умолчанию
+    this.$emit("update:selectedSize", this.selectedSize);
   },
   methods: {
     selectSize(size) {

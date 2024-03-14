@@ -1,14 +1,24 @@
 <template>
-  <div class="grid-container">
+  <div
+    class="grid-container"
+    :style="{ 'grid-template-columns': `repeat(${columnsCount}, 1fr)` }"
+  >
     <div
       v-for="subCategory in currentCategory.subCategories"
       :key="subCategory.name"
       class="sub-category p-5 rounded-2xl"
-      @click="selectSubCategory(subCategory.name)"
+      :class="{ selected: subCategory.selected }"
+      @click="selectSubCategory(subCategory)"
     >
       <CupIcon class="sub-category-svg" />
       <div class="item-name text-sm font-semibold">
         {{ subCategory.name }}
+      </div>
+      <div
+        class="price text-xs font-semibold"
+        :class="{ 'price-selected': subCategory.selected }"
+      >
+        $ {{ subCategory.price }}
       </div>
     </div>
   </div>
@@ -16,8 +26,6 @@
 
 <script>
 import CupIcon from "~/components/icons/CupIcon.vue";
-import MinusIcon from "~/components/icons/MinusIcon.vue";
-import PlusIcon from "~/components/icons/PlusIcon.vue";
 
 export default {
   props: {
@@ -25,27 +33,84 @@ export default {
   },
   components: {
     CupIcon,
-    MinusIcon,
-    PlusIcon,
+  },
+  computed: {
+    columnsCount() {
+      return this.currentCategory.subCategories.length < 3 ? 2 : 3;
+    },
   },
   methods: {
-    selectSubCategory(categoryName) {
-      console.log(categoryName);
+    selectSubCategory(selectedSubCategory) {
+      if (this.currentCategory.multipleSelectionAllowed) {
+        // Множественный выбор: просто переключаем статус выбранного
+        selectedSubCategory.selected = !selectedSubCategory.selected;
+      } else {
+        // Одиночный выбор: проверяем, выбран ли уже этот элемент
+        if (selectedSubCategory.selected) {
+          // Если элемент уже выбран, снимаем выбор
+          selectedSubCategory.selected = false;
+        } else {
+          // Если элемент не был выбран, сначала сбрасываем выбор всех элементов...
+          this.currentCategory.subCategories.forEach((subCategory) => {
+            subCategory.selected = false;
+          });
+          // ...затем выбираем текущий элемент
+          selectedSubCategory.selected = true;
+        }
+      } // После выбора подкатегории, отправляем обновленный список в родительский компонент
+      this.$emit(
+        "update:selectedSubCategories",
+        this.currentCategory.subCategories.filter(
+          (subCategory) => subCategory.selected
+        )
+      );
+
+      // Обновляем название текущей категории для отображения в родительском компоненте
+      const selectedSubCategories = this.currentCategory.subCategories.filter(
+        (subCategory) => subCategory.selected
+      );
+      if (selectedSubCategories.length > 1) {
+        // Если выбрано более одной подкатегории
+        const firstSelectedName = selectedSubCategories[0].name;
+        const additionalCount = selectedSubCategories.length - 1;
+        this.$emit(
+          "update:categoryName",
+          `${firstSelectedName} и ещё ${additionalCount}`
+        );
+      } else if (selectedSubCategories.length === 1) {
+        // Если выбрана только одна подкатегория
+        this.$emit("update:categoryName", selectedSubCategories[0].name);
+      } else {
+        // Если не выбрана ни одна подкатегория
+        this.$emit("update:categoryName", this.currentCategory.name);
+      }
     },
   },
 };
 </script>
 
 <style>
+.price {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+  color: #818181;
+}
+
+.price-selected {
+  color: #4a4949; /* Зелёный цвет */
+}
+
 .grid-container {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  /* grid-template-columns: repeat(3, 1fr); */
   gap: 0.5rem;
 }
 
 .sub-category {
-  width: 6rem;
-  height: 9rem;
+  width: 6.5rem;
+  height: 10rem;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -53,12 +118,12 @@ export default {
   background-color: #fff;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   cursor: pointer;
-  transition: 0.3s all;
+  transition: 0.1s all;
 }
 
-.sub-category:hover {
+/* .sub-category:hover {
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-}
+} */
 
 .sub-category-svg {
   height: 5rem;
@@ -70,6 +135,11 @@ export default {
   flex-direction: column;
   justify-content: center;
   text-align: center;
+  color: #4a4949;
+}
+
+.selected {
+  border: 2px solid #007bff; /* Синий цвет */
 }
 
 @media (max-width: 320px) {

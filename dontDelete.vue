@@ -9,7 +9,10 @@
       <CupIcon class="sub-category-svg" />
       <div class="item-name">{{ subCategory.name }}</div>
 
-      <div class="quantity-control" v-if="currentCategory.showQuantity">
+      <div
+        class="quantity-control"
+        v-if="currentCategory.multipleSelectionAllowed"
+      >
         <div class="quantity-button">
           <MinusIcon class="minus-button" />
         </div>
