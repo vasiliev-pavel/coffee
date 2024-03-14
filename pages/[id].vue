@@ -71,6 +71,9 @@
             >
               <CupIcon class="category-icon" />
               <div class="category-name">{{ category.displayName }}</div>
+              <div v-if="category.additionalCount > 0" class="category-name">
+                {{ category.additionalCount }}
+              </div>
             </div>
           </div>
         </div>
@@ -88,8 +91,7 @@
             currentCategory.subCategories.length > 0
           "
           :currentCategory="currentCategory"
-          @update:selectedSubCategories="handleSelectedSubCategories"
-          @update:categoryName="handleCategoryNameChange"
+          @update:categoryState="handleCategoryStateUpdate"
         />
       </div>
 
@@ -100,43 +102,28 @@
 </template>
 
 <script setup>
-definePageMeta({
-  layout: "product",
-});
-
-import { ref } from "vue";
 import { extras as mockCategories } from "~/mock.ts";
 import SubcategoryBar from "~/components/SubcategoryBar.vue";
 import CupIcon from "~/components/icons/CupIcon.vue";
 import PlusIcon from "~/components/icons/PlusIcon.vue";
 import CloseIcon from "~/components/icons/CloseIcon.vue";
-
 import {
   startDragging,
   stopDragging,
   handleDragging,
 } from "~/utils/dragToScroll";
-
 import { data } from "~/mock.ts";
 
-const cartStore = useCart2Store(); // Используем Pinia store
-const activeCategoryName = ref(""); // Хранилище для активного названия категории
-const selectedSubcategories = ref([]); // Хранилище для выбранных подкатегорий
-const categoryStates = ref({});
+definePageMeta({
+  layout: "product",
+});
 
 const route = useRoute();
 const router = useRouter();
-const item = computed(() => {
-  const items = Object.values(data).flat();
-  return items.find((item) => item.id === parseInt(route.params.id));
-});
-
+const cartStore = useCart2Store(); // Используем Pinia store
+const selectedSubcategories = ref([]); // Хранилище для выбранных подкатегорий
+const categoryStates = ref({});
 const selectedSize = ref();
-
-const handleSizeSelect = (size) => {
-  selectedSize.value = size; // Записываем выбор в локальное состояние
-};
-
 const categories = ref(
   mockCategories.map((category) => ({
     ...category,
@@ -145,13 +132,19 @@ const categories = ref(
     additionalCount: 0, // Инициализируем счётчик дополнительных выборов
   }))
 );
-
 const extraBar = ref(null);
+const extraBarInner = ref(null);
 const currentCategory = ref(null);
 const isExtraContainerVisible = ref(false); // по умолчанию скрыт
 
-// для скролла Options Bar
-const extraBarInner = ref(null);
+const item = computed(() => {
+  const items = Object.values(data).flat();
+  return items.find((item) => item.id === parseInt(route.params.id));
+});
+
+const handleSizeSelect = (size) => {
+  selectedSize.value = size; // Записываем выбор в локальное состояние
+};
 
 const updateCategoryState = (
   categoryName,
@@ -169,36 +162,27 @@ const updateCategoryState = (
   }
 };
 
-// Функция для обработки изменения названия категории
-const handleCategoryNameChange = (newName) => {
+const handleCategoryStateUpdate = ({
+  categoryName,
+  selectedSubCategories,
+  additionalCount,
+}) => {
+  // Находим текущую категорию и обновляем её состояние
   if (currentCategory.value) {
-    // Обновляем состояние текущей категории
-    updateCategoryState(
-      currentCategory.value.name,
-      selectedSubcategories.value,
-      newName
-    );
-
-    // Непосредственно обновляем displayName в списке категорий
     const categoryToUpdate = categories.value.find(
       (c) => c.name === currentCategory.value.name
     );
     if (categoryToUpdate) {
-      categoryToUpdate.displayName = newName;
+      categoryToUpdate.displayName = categoryName;
+      categoryToUpdate.additionalCount = additionalCount; // Обновляем счётчик дополнительных выборов
     }
 
-    // Обновляем activeCategoryName для отображения в интерфейсе пользователя
-    activeCategoryName.value = newName;
-  }
-};
-
-const handleSelectedSubCategories = (subCategories) => {
-  selectedSubcategories.value = subCategories;
-  if (currentCategory.value) {
+    // Обновляем состояние selectedSubcategories и categoryStates для текущей категории
+    selectedSubcategories.value = selectedSubCategories;
     updateCategoryState(
       currentCategory.value.name,
-      subCategories,
-      activeCategoryName.value
+      selectedSubCategories,
+      categoryName
     );
   }
 };
@@ -248,13 +232,6 @@ const selectCategory = (categoryName) => {
   }
 };
 
-const handleWheelEvent = (event) => {
-  if (!extraBarInner.value) return;
-  const { deltaX, deltaY } = event;
-  extraBarInner.value.scrollLeft += deltaY + deltaX;
-  event.preventDefault(); // Предотвратить стандартное поведение прокрутки
-};
-
 onMounted(() => {
   if (extraBarInner.value) {
     extraBarInner.value.addEventListener("mousedown", (e) =>
@@ -272,6 +249,13 @@ onMounted(() => {
     extraBarInner.value.addEventListener("wheel", handleWheelEvent);
   }
 });
+
+const handleWheelEvent = (event) => {
+  if (!extraBarInner.value) return;
+  const { deltaX, deltaY } = event;
+  extraBarInner.value.scrollLeft += deltaY + deltaX;
+  event.preventDefault(); // Предотвратить стандартное поведение прокрутки
+};
 </script>
 
 <style>

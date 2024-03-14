@@ -57,33 +57,28 @@ export default {
           // ...затем выбираем текущий элемент
           selectedSubCategory.selected = true;
         }
-      } // После выбора подкатегории, отправляем обновленный список в родительский компонент
-      this.$emit(
-        "update:selectedSubCategories",
-        this.currentCategory.subCategories.filter(
-          (subCategory) => subCategory.selected
-        )
-      );
+      }
 
-      // Обновляем название текущей категории для отображения в родительском компоненте
+      // После выбора подкатегории, отправляем обновленный список в родительский компонент
+      // Собираем выбранные подкатегории
       const selectedSubCategories = this.currentCategory.subCategories.filter(
         (subCategory) => subCategory.selected
       );
-      if (selectedSubCategories.length > 1) {
-        // Если выбрано более одной подкатегории
-        const firstSelectedName = selectedSubCategories[0].name;
-        const additionalCount = selectedSubCategories.length - 1;
-        this.$emit(
-          "update:categoryName",
-          `${firstSelectedName} и ещё ${additionalCount}`
-        );
-      } else if (selectedSubCategories.length === 1) {
-        // Если выбрана только одна подкатегория
-        this.$emit("update:categoryName", selectedSubCategories[0].name);
-      } else {
-        // Если не выбрана ни одна подкатегория
-        this.$emit("update:categoryName", this.currentCategory.name);
+      let categoryName = this.currentCategory.name;
+      let additionalCount = 0; // Сбрасываем счетчик дополнительных выборов
+
+      // Условие обновляется для обработки как ситуации с одной, так и с несколькими подкатегориями
+      if (selectedSubCategories.length >= 1) {
+        categoryName = selectedSubCategories[0].name;
+        additionalCount = selectedSubCategories.length - 1;
       }
+
+      // Передача обновленной информации о категории
+      this.$emit("update:categoryState", {
+        categoryName, // Передается имя первой выбранной подкатегории
+        selectedSubCategories, // Передается массив выбранных подкатегорий
+        additionalCount, // Передается количество дополнительно выбранных подкатегорий
+      });
     },
   },
 };
