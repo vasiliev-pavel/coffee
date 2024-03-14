@@ -83,6 +83,19 @@ export const extras = [
     },
 ];
 
+export const kitchens = [
+    { id: 1, name: "Coffee" },
+    { id: 2, name: "Sandwiches" },
+    { id: 3, name: "Salads" },
+    { id: 4, name: "Burgers" },
+    { id: 5, name: "Wraps" },
+];
+export const menus = [
+    { id: 1, name: "Section #1" },
+    { id: 2, name: "Section #2" },
+    { id: 3, name: "Section #3" },
+];
+
 export const categories = [
     { name: "Hot Coffee", hash: "#hot_coffee", isActive: false, svgPath: "" },
     { name: "Cold Coffee", hash: "#cold_coffee", isActive: false, svgPath: "" },
