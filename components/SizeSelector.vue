@@ -80,7 +80,7 @@ export default {
   justify-content: center;
   align-items: center;
   cursor: pointer;
-  transition: background-color 0.3s ease-in-out;
+  transition: background-color 0.1s ease-in-out;
   margin: 0 0.3rem;
 }
 
@@ -96,7 +96,7 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
-  transition: transform 0.3s ease-in-out;
+  transition: transform 0.1s ease-in-out;
 }
 
 .size-content.is-selected {
@@ -108,7 +108,7 @@ export default {
 }
 
 .size-option:not(.selected) .size-content {
-  transition: transform 0.3s ease-in-out;
+  transition: transform 0.1s ease-in-out;
 }
 
 .font-bold {
@@ -117,7 +117,9 @@ export default {
 
 .font-medium {
   transition: color 0.3s ease-in-out;
-} /* Мобильные телефоны и маленькие устройства (меньше 640px) */
+}
+
+/* Мобильные телефоны и маленькие устройства (меньше 640px) */
 @media (max-width: 639px) {
   .size-label {
     font-size: 0.875rem; /* Уменьшаем размер шрифта */

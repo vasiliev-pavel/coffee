@@ -69,11 +69,17 @@
               }"
               class="category-item"
             >
-              <CupIcon class="category-icon" />
-              <div class="category-name">{{ category.displayName }}</div>
-              <div v-if="category.additionalCount > 0" class="category-name">
-                {{ category.additionalCount }}
+              <div class="relative">
+                <CupIcon class="category-icon" />
+                <div
+                  v-show="category.additionalCount > 0"
+                  class="additional-count"
+                >
+                  +{{ category.additionalCount }}
+                </div>
               </div>
+
+              <div class="category-name">{{ category.displayName }}</div>
             </div>
           </div>
         </div>
@@ -259,6 +265,21 @@ const handleWheelEvent = (event) => {
 </script>
 
 <style>
+.additional-count {
+  position: absolute; /* Изменено с fixed на absolute */
+  bottom: 0px;
+  right: 0px;
+  background-color: #3b82f6; /* Белый фон */
+  color: #fff; /* Черный текст */
+  font-size: 0.8rem; /* Меньший размер текста для вписывания в круг */
+  width: 30px; /* Фиксированная ширина для создания круга */
+  height: 30px; /* Фиксированная высота для создания круга */
+  line-height: 30px; /* Высота строки соответствует высоте для вертикального центрирования текста */
+  text-align: center; /* Горизонтальное выравнивание текста */
+  border-radius: 50%; /* Превращает квадрат в круг */
+  z-index: 50; /* Убедитесь, что элемент находится поверх других элементов */
+}
+
 .extra-bar {
   display: flex;
   justify-content: center;
@@ -308,6 +329,8 @@ const handleWheelEvent = (event) => {
   flex-direction: column;
   align-items: center;
   text-align: center;
+  padding-left: 0.4rem;
+  padding-right: 0.4rem;
 }
 
 .category-icon {
@@ -322,6 +345,7 @@ const handleWheelEvent = (event) => {
 }
 
 .category-item.is-active .category-icon {
+  transform-origin: bottom;
   transform: scale(1.4);
 }
 

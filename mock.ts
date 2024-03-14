@@ -10,7 +10,7 @@ export const extras = [
         ],
     },
     {
-        name: "Temperature",
+        name: "t°",
         isActive: false,
         subCategories: [
             { name: "Hot", price: 0, svgPath: "M6 6 L14 6 L14 14 L6 14 Z" },
