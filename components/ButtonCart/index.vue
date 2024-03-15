@@ -6,7 +6,7 @@
           <PayIcon />
         </div>
         <div class="summary-in-cart text-white px-4">
-          {{ totalSum.toFixed(2) }}
+          $ {{ totalSum.toFixed(2) }}
         </div>
         <div class="last-in-cart flex">
           <img

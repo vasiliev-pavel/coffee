@@ -105,9 +105,9 @@
 
         <div
           v-show="isExtraContainerVisible"
-          class="absolute bottom-0 pb-14 text-[#4A4949] font-medium text-2xl"
+          class="absolute bottom-0 text-[#4A4949] font-medium text-2xl mb-14"
         >
-          $ {{ totalItemPrice }}
+          ${{ totalItemPrice }}
         </div>
       </div>
 
