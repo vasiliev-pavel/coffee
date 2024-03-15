@@ -22,7 +22,7 @@ useHead({
 <style>
 html {
   /* background-color: #e8e8e8;*/
-  background-color: #f3f4f6;
+  background-color: #e8e8e8;
   scroll-behavior: smooth;
 }
 </style>
