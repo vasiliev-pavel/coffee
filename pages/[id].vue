@@ -3,10 +3,12 @@
     <section class="grid grid-cols-1">
       <!-- Левая часть -->
       <div class="col-span-1 h-[60vh] relative">
-        <CloseIcon
-          @click="goBack"
-          class="absolute top-0 right-0 m-5 z-10 hover:scale-110 active:scale-95 transition duration-150 ease-in-out"
-        />
+        <Transition name="fade">
+          <CloseIcon
+            v-show="!isExtraContainerVisible"
+            @click="goBack"
+            class="absolute top-0 right-0 m-5 z-10 hover:scale-110 active:scale-95 transition duration-150 ease-in-out"
+        /></Transition>
         <section>
           <video
             v-if="item.videoSrc"
@@ -35,12 +37,13 @@
               <div class="flex items-center">
                 <button
                   @click="increment"
-                  class="bg-blue-500 hover:bg-blue-600 text-white font-bold p-4 rounded-full"
+                  class="button_plus bg-blue-500 hover:bg-blue-600 text-white font-bold p-4 rounded-full"
                 >
                   <PlusIcon class="h-[2rem] w-[2rem]" />
                 </button>
+
                 <h3 class="flex text-[#4A4949] font-medium text-3xl ml-2">
-                  ${{ item.price }}
+                  ${{ totalItemPrice }}
                 </h3>
               </div>
 
@@ -99,6 +102,13 @@
           :currentCategory="currentCategory"
           @update:categoryState="handleCategoryStateUpdate"
         />
+
+        <div
+          v-show="isExtraContainerVisible"
+          class="absolute bottom-0 pb-14 text-[#4A4949] font-medium text-2xl"
+        >
+          $ {{ totalItemPrice }}
+        </div>
       </div>
 
       <!-- хорошо сочетается-->
@@ -148,6 +158,27 @@ const isExtraContainerVisible = ref(false); // по умолчанию скры�
 const item = computed(() => {
   const items = Object.values(data).flat();
   return items.find((item) => item.id === parseInt(route.params.id));
+});
+
+const totalItemPrice = computed(() => {
+  let totalPrice = item.value.price; // Базовая цена товара
+
+  // Добавляем стоимость размера, если она есть
+  if (selectedSize.value && selectedSize.value.price) {
+    totalPrice += selectedSize.value.price;
+  }
+
+  // Добавляем стоимость каждой выбранной подкатегории
+  Object.entries(categoryStates.value).forEach(
+    ([categoryName, { selectedSubcategories }]) => {
+      selectedSubcategories.forEach((subcategory) => {
+        // Предположим, что у subcategory есть свойство price
+        totalPrice += subcategory.price || 0;
+      });
+    }
+  );
+
+  return totalPrice;
 });
 
 const handleSizeSelect = (size) => {
@@ -215,6 +246,7 @@ const increment = () => {
     size: selectedSize.value, // Выбранный размер
     extras: allSelectedExtras, // Группированные выбранные дополнения по категориям
     quantity: 1, // Количество
+    totalSum: totalItemPrice,
   };
 
   // Добавляем товар в корзину через Pinia store
@@ -271,6 +303,25 @@ const handleWheelEvent = (event) => {
 </script>
 
 <style>
+.button_plus {
+  transition: transform 0.1s ease-in-out, box-shadow 0.1s ease-in-out;
+}
+
+.button_plus:active {
+  transform: scale(0.95); /* Уменьшаем кнопку при нажатии */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Добавляем тень для большего акцента на кнопке */
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+
 .additional-count {
   position: absolute; /* Изменено с fixed на absolute */
   bottom: 0px;
@@ -373,7 +424,7 @@ const handleWheelEvent = (event) => {
   transition: transform 0.5s ease-in-out;
   z-index: 5;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); /* Пример мягкой тени */
-  background-color: #a5a5a5;
+  background-color: #dddddd;
   height: 67vh;
   justify-content: center;
   align-items: center;

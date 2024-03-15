@@ -29,9 +29,9 @@ export default {
     sizes: {
       type: Array,
       default: () => [
-        { label: "S", volume: "250ml", price: 0 },
-        { label: "M", volume: "500ml", price: 1 },
-        { label: "L", volume: "750ml", price: 3 },
+        { label: "S", volume: "250ml", price: 0.0 },
+        { label: "M", volume: "500ml", price: 0.5 },
+        { label: "L", volume: "750ml", price: 0.95 },
       ],
     },
   },
