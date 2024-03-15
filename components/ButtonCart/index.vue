@@ -29,7 +29,7 @@ const totalSum = computed(() => {
 });
 
 const lastThreeIds = computed(() => {
-  return cartStore.getLastThreeItems.value?.map((item) => item.id) || [];
+  // return cartStore.getLastThreeItems.value?.map((item) => item.id) || [];
 });
 </script>
 

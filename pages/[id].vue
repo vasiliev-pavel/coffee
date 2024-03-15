@@ -4,7 +4,7 @@
       <!-- Левая часть -->
       <div class="col-span-1 h-[60vh] relative">
         <CloseIcon
-          @click=""
+          @click="goBack"
           class="absolute top-0 right-0 m-5 z-10 hover:scale-110 active:scale-95 transition duration-150 ease-in-out"
         />
         <section>
@@ -119,6 +119,7 @@ import {
   handleDragging,
 } from "~/utils/dragToScroll";
 import { data } from "~/mock.ts";
+import { onBeforeRouteLeave } from "vue-router";
 
 definePageMeta({
   layout: "product",
@@ -126,6 +127,7 @@ definePageMeta({
 
 const route = useRoute();
 const router = useRouter();
+const userStore = useUserStore(); // Используем Pinia store
 const cartStore = useCart2Store(); // Используем Pinia store
 const selectedSubcategories = ref([]); // Хранилище для выбранных подкатегорий
 const categoryStates = ref({});
@@ -236,6 +238,10 @@ const selectCategory = (categoryName) => {
       (cat) => (cat.isActive = cat.name === categoryName)
     );
   }
+};
+
+const goBack = () => {
+  router.push(`/${userStore.path}`);
 };
 
 onMounted(() => {
