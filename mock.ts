@@ -85,11 +85,11 @@ export const extras = [
 
 
 export const kitchens = [
-    { id: 1, name: "Coffee" },
-    { id: 2, name: "Sandwiches" },
-    { id: 3, name: "Salads" },
-    { id: 4, name: "Burgers" },
-    { id: 5, name: "Wraps" },
+    { id: 1, name: "Drinks" },
+    { id: 2, name: "Hot" },
+    { id: 3, name: "Fryer" },
+    { id: 4, name: "Cold" },
+    { id: 4, name: "Salads" },
 ];
 export const menus = [
     { id: 1, name: "Section #1" },
