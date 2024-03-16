@@ -64,6 +64,7 @@ const cartItems = computed(() => cartStore.items);
 .cart-page-wrapper {
   display: flex;
   flex-direction: column;
+  min-height: 93vh; /* Устанавливаем минимальную высоту страницы */
 }
 
 .cart-items-wrapper {
