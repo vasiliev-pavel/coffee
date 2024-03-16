@@ -43,7 +43,7 @@
                 </button>
 
                 <h3 class="flex text-[#4A4949] font-medium text-3xl ml-2">
-                  ${{ totalItemPrice }}
+                  ${{ totalItemPrice.toFixed(2) }}
                 </h3>
               </div>
 
@@ -105,9 +105,9 @@
 
         <div
           v-show="isExtraContainerVisible"
-          class="absolute bottom-0 text-[#4A4949] font-medium text-2xl mb-14"
+          class="absolute bottom-0 text-[#4A4949] font-medium text-2xl m-14"
         >
-          ${{ totalItemPrice }}
+          ${{ totalItemPrice.toFixed(2) }}
         </div>
       </div>
 
@@ -246,7 +246,7 @@ const increment = () => {
     size: selectedSize.value, // Выбранный размер
     extras: allSelectedExtras, // Группированные выбранные дополнения по категориям
     quantity: 1, // Количество
-    totalSum: totalItemPrice,
+    totalPrice: totalItemPrice.value,
   };
 
   // Добавляем товар в корзину через Pinia store

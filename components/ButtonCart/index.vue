@@ -1,17 +1,17 @@
 <template>
-  <div class="pay-cart" v-if="hasItemsInCart">
+  <div class="pay-cart" v-if="cartStore.items.length > 0">
     <button class="pay-button-cart rounded-[5rem]" @click="goToCart">
       <div class="pay-info flex justify-between items-center w-full">
         <div class="pay-icon-container rounded-[5rem]">
           <PayIcon />
         </div>
         <div class="summary-in-cart text-white px-4">
-          $ {{ totalSum.toFixed(2) }}
+          $ {{ cartStore.totalSum.toFixed(2) }}
         </div>
         <div class="last-in-cart flex">
           <img
-            v-for="(item, index) in lastThreeItems"
-            :key="index"
+            v-for="item in cartStore.lastThreeItems"
+            :key="item.id"
             :src="item.photo"
             class="item-icon"
           />
@@ -22,27 +22,11 @@
 </template>
 
 <script setup>
-import { computed } from "vue";
 import { useRouter } from "vue-router";
 import PayIcon from "~/components/icons/PayIcon.vue";
 
 const router = useRouter();
 const cartStore = useCart2Store();
-
-const cartItems = computed(() => cartStore.items);
-
-const hasItemsInCart = computed(() => cartItems.value.length > 0);
-
-const lastThreeItems = computed(() => {
-  // Возвращаем последние три элемента из корзины
-  return cartItems.value.slice(-3);
-});
-
-const totalSum = computed(() => {
-  return cartItems.value.reduce((acc, item) => {
-    return acc + item.price * item.quantity;
-  }, 0);
-});
 
 function goToCart() {
   router.push("/cart");

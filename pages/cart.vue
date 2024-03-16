@@ -1,52 +1,93 @@
 <template>
-  <div class="cart-page2">
-    <div v-for="item in cartItems" :key="item.id" class="cart-item2">
-      <img :src="item.photo" class="item-photo2" alt="Product Image" />
-      <div class="item-content2">
-        <div class="item-header2">
-          <div class="item-name2">{{ item.name }}</div>
-          <div class="item-price2">${{ item.price.toFixed(2) }}</div>
-        </div>
-        <div class="item-size2 mb-1">{{ item.size.volume }}</div>
-        <div class="item-extras">
-          <div
-            v-for="(extras, category) in item.extras"
-            :key="category"
-            class="extras-category2"
-          >
-            <div class="category-name2">{{ category }}:</div>
-            <div class="extras-list2 text-base">
-              <span v-for="extra in extras" :key="extra" class="extra-name2"
-                >+ {{ extra }}</span
-              >
+  <div class="cart-page-wrapper">
+    <div class="cart-items-wrapper">
+      <div v-for="item in cartItems" :key="item.id" class="cart-item2">
+        <img :src="item.photo" class="item-photo2" alt="Product Image" />
+        <div class="item-content2">
+          <div class="item-header2">
+            <div class="item-name2">{{ item.name }}</div>
+            <div class="item-price2">${{ item.totalPrice.toFixed(2) }}</div>
+          </div>
+          <div class="item-size2 mb-1">{{ item.size.volume }}</div>
+          <div class="item-extras">
+            <div
+              v-for="(extras, category) in item.extras"
+              :key="category"
+              class="extras-category2"
+            >
+              <div class="category-name2">{{ category }}:</div>
+              <div class="extras-list2">
+                <span v-for="extra in extras" :key="extra" class="extra-name2"
+                  >+ {{ extra }}</span
+                >
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-    <div class="checkout-area2 mb-10">
-      <div class="total-price2">Total $ {{ totalSum }}</div>
-      <button class="pay-button2">Pay</button>
+
+    <div class="checkout-wrapper">
+      <div class="total-price2 mt-3">
+        <div class="cart-total-text leading-none">Total</div>
+        <div class="cart-total-price leading-none">
+          ${{ cartStore.totalSum.toFixed(2) }}
+        </div>
+      </div>
+      <button class="pay-button2 rounded-3xl py-2 mt-3">Pay</button>
     </div>
   </div>
 </template>
 
 <script setup>
+definePageMeta({
+  layout: "cart",
+});
+
 import { computed } from "vue";
 
 const cartStore = useCart2Store();
 const cartItems = computed(() => cartStore.items);
-
-const totalSum = computed(() => {
-  return cartItems.value.reduce((acc, item) => acc + item.totalPrice, 0);
-});
 </script>
 
 <style>
-.cart-page2 {
-  padding-top: 20px;
+.cart-total-text {
+  font-size: 1.2rem;
+  font-weight: 500;
 }
 
+.cart-total-price {
+  font-size: 1.7rem;
+  font-weight: 400;
+}
+
+.cart-page-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.cart-items-wrapper {
+  overflow-y: auto;
+  flex-grow: 1;
+  padding-top: 20px;
+  will-change: transform; /* Оптимизация прокрутки */
+}
+
+.checkout-wrapper {
+  padding-bottom: 1.5rem;
+  background-color: #e8e8e8;
+  border-top: 1px solid #ffffff;
+  position: sticky;
+  bottom: 0;
+
+  z-index: 2; /* Убедитесь, что z-index достаточно высок */
+}
+
+.checkout-area2 {
+  background-color: #e8e8e8;
+  padding: 1.5rem;
+  border-top: 1px solid #ffffff;
+}
 .cart-item2 {
   display: flex;
   align-items: flex-start;
@@ -74,7 +115,7 @@ const totalSum = computed(() => {
 }
 
 .item-name2 {
-  font-size: 18px;
+  font-size: 1.2rem;
   font-weight: 500;
 }
 
@@ -86,15 +127,11 @@ const totalSum = computed(() => {
 
 .item-size2 {
   color: #333;
-  font-size: 14px; /* Меньший шрифт для объема */
-}
-
-.item-extras2 {
-  margin-top: 5px;
+  font-size: 0.8rem; /* Меньший шрифт для объема */
 }
 
 .extras-category2 {
-  font-size: 14px; /* Меньший шрифт для дополнений */
+  font-size: 0.8rem; /* Меньший шрифт для дополнений */
 }
 
 .category-name2 {
@@ -102,37 +139,28 @@ const totalSum = computed(() => {
   font-weight: 400;
 }
 
-.extras-list2 .extra-name2 {
-  display: flex;
-  flex-direction: column;
+.extra-name2 {
+  font-size: 1rem;
+  font-weight: 400;
 }
 
-.checkout-area2 {
-  position: fixed;
+.extras-list2 {
   display: flex;
   flex-direction: column;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  border-top: 1px solid #ffffff; /* Темнее разделительная линия */
-}
-
-.payment-method2 select {
-  margin-bottom: 20px;
 }
 
 .total-price2 {
-  font-size: 24px;
-  font-weight: bold;
-  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column; /* Расположение элементов в колонку */
+  align-items: flex-end; /* Выравнивание элементов по правому краю */
 }
 
 .pay-button2 {
-  background-color: blue;
+  background-color: #3b82f6;
   color: white;
-  padding: 10px 20px;
   border: none;
-  border-radius: 5px;
   cursor: pointer;
+  width: 100%;
+  font-size: 1.3rem; /* Меньший шрифт для объема */
 }
 </style>

@@ -1,0 +1,25 @@
+<template>
+  <header class="container mx-auto px-4">
+    <NavBar />
+  </header>
+  <main class="container mx-auto px-4">
+    <slot />
+  </main>
+</template>
+<script setup>
+useHead({
+  meta: [
+    {
+      name: "viewport",
+      content:
+        "width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no",
+    },
+  ],
+});
+</script>
+
+<style>
+html {
+  scroll-behavior: smooth;
+}
+</style>
