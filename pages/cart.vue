@@ -10,10 +10,12 @@
         <img :src="item.photo" class="item-photo2" alt="Product Image" />
         <div class="item-content2">
           <div class="item-header2">
-            <div class="item-name2">{{ item.name }}</div>
-            <div class="item-price2">${{ item.totalPrice.toFixed(2) }}</div>
+            <div class="item-name2 leading-none">{{ item.name }}</div>
+            <div class="item-price2 leading-none">
+              ${{ item.totalPrice.toFixed(2) }}
+            </div>
           </div>
-          <div class="item-size2 mb-1">{{ item.size.volume }}</div>
+          <div class="item-size2 mb-1 leading-none">{{ item.size.volume }}</div>
           <div class="item-extras">
             <div
               v-for="(extras, category) in item.extras"
@@ -110,7 +112,7 @@ function handleItemClick(item, index) {
 }
 
 .checkout-area2 {
-  background-color: #e8e8e8;
+  /* background-color: #e8e8e8; */
   padding: 1.5rem;
   border-top: 1px solid #ffffff;
 }
@@ -153,7 +155,7 @@ function handleItemClick(item, index) {
 
 .item-size2 {
   color: #333;
-  font-size: 0.8rem; /* Меньший шрифт для объема */
+  font-size: 0.9rem; /* Меньший шрифт для объема */
 }
 
 .extras-category2 {

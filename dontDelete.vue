@@ -1,124 +1,37 @@
 <template>
-  <div class="grid-container">
-    <div
-      v-for="subCategory in currentCategory.subCategories"
-      :key="subCategory.name"
-      class="sub-category"
-      @click="selectSubCategory(subCategory.name)"
-    >
-      <CupIcon class="sub-category-svg" />
-      <div class="item-name">{{ subCategory.name }}</div>
-
+  <div
+    class="extra-container"
+    :class="{ 'is-visible': isExtraContainerVisible }"
+  >
+    <div class="flex flex-col justify-between">
       <div
-        class="quantity-control"
-        v-if="currentCategory.multipleSelectionAllowed"
+        v-if="isExtraContainerVisible"
+        class="flex flex-row items-center justify-between mb-12 -ml-5 -mr-5"
       >
-        <div class="quantity-button">
-          <MinusIcon class="minus-button" />
+        <div class="flex items-center">
+          <button
+            @click="increment"
+            class="button_plus bg-blue-500 hover:bg-blue-600 text-white font-bold p-4 rounded-full"
+          >
+            <PlusIcon v-if="!cartStore.isUpdate" class="h-[2rem] w-[2rem]" />
+            <UpdateIcon v-else class="h-[2rem] w-[2rem]" />
+          </button>
+
+          <h3 class="flex text-[#4A4949] font-medium text-3xl ml-2">
+            ${{ totalItemPrice.toFixed(2) }}
+          </h3>
         </div>
 
-        <span class="quantity-text">1</span>
-
-        <div class="quantity-button">
-          <PlusIcon class="plus-button" />
-        </div>
+        <SizeSelector />
       </div>
+
+      <SubcategoryBar
+        v-if="
+          currentCategory &&
+          currentCategory.subCategories &&
+          currentCategory.subCategories.length > 0
+        "
+      />
     </div>
   </div>
 </template>
-
-<script>
-import CupIcon from "~/components/icons/CupIcon.vue";
-import MinusIcon from "~/components/icons/MinusIcon.vue";
-import PlusIcon from "~/components/icons/PlusIcon.vue";
-
-export default {
-  props: {
-    currentCategory: Object,
-  },
-  components: {
-    CupIcon,
-    MinusIcon,
-    PlusIcon,
-  },
-  methods: {
-    selectSubCategory(categoryName) {
-      console.log(categoryName);
-      // this.$emit("update:category", { categoryName, subCategory });
-    },
-  },
-};
-</script>
-
-<style>
-.grid-container {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1rem;
-}
-
-.sub-category {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 1rem;
-  background-color: #fff;
-  border-radius: 1.5rem;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  cursor: pointer;
-  width: 10rem;
-  height: 14rem;
-  transition: 0.3s all;
-  box-sizing: border-box;
-}
-
-.sub-category:hover {
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-}
-
-.sub-category-svg {
-  height: 7rem;
-}
-
-.item-name {
-  text-align: center;
-  font-size: 1rem; /* Остается без изменений */
-  font-weight: 600;
-  color: #333;
-  margin: 0.5rem 0; /* Изменено с 8px */
-  max-height: 3rem; /* Остается без изменений */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.quantity-text {
-  font-size: 1rem; /* Остается без изменений */
-  font-weight: 600;
-}
-.quantity-control {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%; /* Остается без изменений */
-  margin-top: 0.5rem; /* Изменено с 8px */
-}
-
-.quantity-button {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 1.75rem; /* Изменено с 28px */
-  height: 1.75rem; /* Изменено с 28px */
-  background-color: #98cdfe;
-  border-radius: 9999px;
-  padding: 0.3125rem; /* 5px = 0.3125rem */
-}
-
-.minus-button,
-.plus-button {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-</style>

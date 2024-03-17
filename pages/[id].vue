@@ -43,7 +43,7 @@
                     v-if="!cartStore.isUpdate"
                     class="h-[2rem] w-[2rem]"
                   />
-                  <UpdatesIcon v-else class="h-[2rem] w-[2rem]" />
+                  <UpdateIcon v-else class="h-[2rem] w-[2rem]" />
                 </button>
 
                 <h3 class="flex text-[#4A4949] font-medium text-3xl ml-2">
@@ -97,20 +97,36 @@
         class="extra-container"
         :class="{ 'is-visible': isExtraContainerVisible }"
       >
+        <div class="absolute top-0 left-0 right-0 pt-10 px-5">
+          <div class="flex flex-row items-center justify-between">
+            <div class="flex items-center">
+              <button
+                @click="increment"
+                class="button_plus bg-blue-500 hover:bg-blue-600 text-white font-bold p-4 rounded-full"
+              >
+                <PlusIcon
+                  v-if="!cartStore.isUpdate"
+                  class="h-[2rem] w-[2rem]"
+                />
+                <UpdateIcon v-else class="h-[2rem] w-[2rem]" />
+              </button>
+
+              <h3 class="flex text-[#4A4949] font-medium text-3xl ml-2">
+                ${{ totalItemPrice.toFixed(2) }}
+              </h3>
+            </div>
+
+            <SizeSelector />
+          </div>
+        </div>
         <SubcategoryBar
           v-if="
             currentCategory &&
             currentCategory.subCategories &&
             currentCategory.subCategories.length > 0
           "
+          class="mt-16"
         />
-
-        <div
-          v-show="isExtraContainerVisible"
-          class="absolute bottom-0 text-[#4A4949] font-medium text-2xl m-14"
-        >
-          ${{ totalItemPrice.toFixed(2) }}
-        </div>
       </div>
 
       <!-- хорошо сочетается-->
@@ -125,8 +141,8 @@ import SubcategoryBar from "~/components/SubcategoryBar.vue";
 import CupIcon from "~/components/icons/CupIcon.vue";
 import PlusIcon from "~/components/icons/PlusIcon.vue";
 import CloseIcon from "~/components/icons/CloseIcon.vue";
-import UpdatesIcon from "~/components/icons/UpdatesIcon.vue";
-//
+import UpdateIcon from "~/components/icons/UpdateIcon.vue";
+
 import {
   startDragging,
   stopDragging,
