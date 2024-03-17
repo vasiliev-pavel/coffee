@@ -39,7 +39,11 @@
                   @click="increment"
                   class="button_plus bg-blue-500 hover:bg-blue-600 text-white font-bold p-4 rounded-full"
                 >
-                  <PlusIcon class="h-[2rem] w-[2rem]" />
+                  <PlusIcon
+                    v-if="!cartStore.isUpdate"
+                    class="h-[2rem] w-[2rem]"
+                  />
+                  <UpdatesIcon v-else class="h-[2rem] w-[2rem]" />
                 </button>
 
                 <h3 class="flex text-[#4A4949] font-medium text-3xl ml-2">
@@ -47,7 +51,7 @@
                 </h3>
               </div>
 
-              <SizeSelector @update:selectedSize="handleSizeSelect" />
+              <SizeSelector />
             </div>
           </div>
         </section>
@@ -99,8 +103,6 @@
             currentCategory.subCategories &&
             currentCategory.subCategories.length > 0
           "
-          :currentCategory="currentCategory"
-          @update:categoryState="handleCategoryStateUpdate"
         />
 
         <div
@@ -123,25 +125,25 @@ import SubcategoryBar from "~/components/SubcategoryBar.vue";
 import CupIcon from "~/components/icons/CupIcon.vue";
 import PlusIcon from "~/components/icons/PlusIcon.vue";
 import CloseIcon from "~/components/icons/CloseIcon.vue";
+import UpdatesIcon from "~/components/icons/UpdatesIcon.vue";
+//
 import {
   startDragging,
   stopDragging,
   handleDragging,
 } from "~/utils/dragToScroll";
 import { data } from "~/mock.ts";
-import { onBeforeRouteLeave } from "vue-router";
-
+import cart from "./cart.vue";
 definePageMeta({
   layout: "product",
 });
 
 const route = useRoute();
 const router = useRouter();
-const userStore = useUserStore(); // Используем Pinia store
-const cartStore = useCart2Store(); // Используем Pinia store
-const selectedSubcategories = ref([]); // Хранилище для выбранных подкатегорий
-const categoryStates = ref({});
-const selectedSize = ref();
+const userStore = useUserStore();
+const cartStore = useCart2Store();
+const orderDetails = useOrderStore();
+
 const categories = ref(
   mockCategories.map((category) => ({
     ...category,
@@ -150,131 +152,11 @@ const categories = ref(
     additionalCount: 0, // Инициализируем счётчик дополнительных выборов
   }))
 );
+
 const extraBar = ref(null);
 const extraBarInner = ref(null);
-const currentCategory = ref(null);
+const currentCategory = computed(() => orderDetails.currentCategory);
 const isExtraContainerVisible = ref(false); // по умолчанию скрыт
-
-const item = computed(() => {
-  const items = Object.values(data).flat();
-  return items.find((item) => item.id === parseInt(route.params.id));
-});
-
-const totalItemPrice = computed(() => {
-  let totalPrice = item.value.price; // Базовая цена товара
-
-  // Добавляем стоимость размера, если она есть
-  if (selectedSize.value && selectedSize.value.price) {
-    totalPrice += selectedSize.value.price;
-  }
-
-  // Добавляем стоимость каждой выбранной подкатегории
-  Object.entries(categoryStates.value).forEach(
-    ([categoryName, { selectedSubcategories }]) => {
-      selectedSubcategories.forEach((subcategory) => {
-        // Предположим, что у subcategory есть свойство price
-        totalPrice += subcategory.price || 0;
-      });
-    }
-  );
-
-  return totalPrice;
-});
-
-const handleSizeSelect = (size) => {
-  selectedSize.value = size; // Записываем выбор в локальное состояние
-};
-
-const updateCategoryState = (
-  categoryName,
-  selectedSubcategories,
-  activeName
-) => {
-  // Если выбранных подкатегорий нет, удаляем категорию из состояния
-  if (selectedSubcategories.length === 0) {
-    delete categoryStates.value[categoryName];
-  } else {
-    categoryStates.value[categoryName] = {
-      selectedSubcategories,
-      activeName,
-    };
-  }
-};
-
-const handleCategoryStateUpdate = ({
-  categoryName,
-  selectedSubCategories,
-  additionalCount,
-}) => {
-  // Находим текущую категорию и обновляем её состояние
-  if (currentCategory.value) {
-    const categoryToUpdate = categories.value.find(
-      (c) => c.name === currentCategory.value.name
-    );
-    if (categoryToUpdate) {
-      categoryToUpdate.displayName = categoryName;
-      categoryToUpdate.additionalCount = additionalCount; // Обновляем счётчик дополнительных выборов
-    }
-
-    // Обновляем состояние selectedSubcategories и categoryStates для текущей категории
-    selectedSubcategories.value = selectedSubCategories;
-    updateCategoryState(
-      currentCategory.value.name,
-      selectedSubCategories,
-      categoryName
-    );
-  }
-};
-
-const increment = () => {
-  // Собираем все выбранные подкатегории, группируя их по категориям
-  const allSelectedExtras = Object.entries(categoryStates.value).reduce(
-    (acc, [categoryName, { selectedSubcategories }]) => {
-      // Если в категории есть выбранные подкатегории, добавляем их в аккумулятор
-      if (selectedSubcategories.length > 0) {
-        acc[categoryName] = selectedSubcategories.map(
-          (subcategory) => subcategory.name
-        );
-      }
-      return acc;
-    },
-    {}
-  );
-
-  const itemToAdd = {
-    ...item.value, // Базовая информация о товаре
-    size: selectedSize.value, // Выбранный размер
-    extras: allSelectedExtras, // Группированные выбранные дополнения по категориям
-    quantity: 1, // Количество
-    totalPrice: totalItemPrice.value,
-  };
-
-  // Добавляем товар в корзину через Pinia store
-  cartStore.addItem(itemToAdd);
-};
-
-const selectCategory = (categoryName) => {
-  const category = categories.value.find((c) => c.name === categoryName);
-
-  // Переключение видимости extra-container и обновление активных состояний
-  if (currentCategory.value && currentCategory.value.name === categoryName) {
-    isExtraContainerVisible.value = !isExtraContainerVisible.value;
-    if (!isExtraContainerVisible.value) {
-      currentCategory.value = null;
-      categories.value.forEach((cat) => (cat.isActive = false));
-    }
-  } else {
-    isExtraContainerVisible.value = true;
-    currentCategory.value = category;
-    categories.value.forEach(
-      (cat) => (cat.isActive = cat.name === categoryName)
-    );
-  }
-};
-
-const goBack = () => {
-  router.push(`/${userStore.path}`);
-};
 
 onMounted(() => {
   if (extraBarInner.value) {
@@ -293,6 +175,107 @@ onMounted(() => {
     extraBarInner.value.addEventListener("wheel", handleWheelEvent);
   }
 });
+
+const item = computed(() => {
+  const items = Object.values(data).flat();
+  return items.find((item) => item.id === parseInt(route.params.id));
+});
+
+const totalItemPrice = computed(() => {
+  let totalPrice = item.value.price; // Базовая цена товара
+
+  // Добавляем стоимость размера, если она есть
+  if (orderDetails.selectedSize && orderDetails.selectedSize.price) {
+    totalPrice += orderDetails.selectedSize.price;
+  }
+
+  // Добавляем стоимость каждой выбранной подкатегории из стора
+  Object.entries(orderDetails.subCategoriesSelections).forEach(
+    ([categoryName, selections]) => {
+      const category = categories.value.find((c) => c.name === categoryName);
+      if (category) {
+        Object.entries(selections).forEach(([subCategoryName, isSelected]) => {
+          if (isSelected) {
+            const subCategory = category.subCategories.find(
+              (sub) => sub.name === subCategoryName
+            );
+            if (subCategory) {
+              totalPrice += subCategory.price || 0;
+            }
+          }
+        });
+      }
+    }
+  );
+
+  return totalPrice;
+});
+
+const increment = () => {
+  // Собираем все выбранные подкатегории, используя данные из стора order
+  const allSelectedExtras = Object.entries(
+    orderDetails.subCategoriesSelections
+  ).reduce((acc, [categoryName, selections]) => {
+    // Фильтруем выбранные подкатегории
+    const selectedSubcategories = Object.entries(selections)
+      .filter(([subCategoryName, isSelected]) => isSelected)
+      .map(([subCategoryName]) => subCategoryName);
+
+    if (selectedSubcategories.length > 0) {
+      acc[categoryName] = selectedSubcategories;
+    }
+
+    return acc;
+  }, {});
+
+  const itemToAdd = {
+    ...item.value, // Базовая информация о товаре
+    size: orderDetails.selectedSize, // Выбранный размер
+    extras: allSelectedExtras, // Группированные выбранные дополнения по категориям
+    totalPrice: totalItemPrice.value,
+  };
+
+  // Добавляем товар в корзину через Pinia store
+  if (!cartStore.isUpdate) {
+    cartStore.addItem(itemToAdd);
+    router.push(`/${userStore.path}`);
+  } else {
+    cartStore.updateItem(cartStore.updateItemIndex, itemToAdd);
+    router.push(`/cart`);
+    cartStore.clearIsUpdate();
+  }
+};
+
+const selectCategory = (categoryName) => {
+  const category = categories.value.find((c) => c.name === categoryName);
+
+  // Переключение видимости extra-container и обновление активных состояний
+  if (currentCategory.value && currentCategory.value.name === categoryName) {
+    isExtraContainerVisible.value = !isExtraContainerVisible.value;
+    if (!isExtraContainerVisible.value) {
+      orderDetails.updateCurrentCategory(null);
+      // currentCategory.value = null;
+      categories.value.forEach((cat) => (cat.isActive = false));
+    }
+  } else {
+    isExtraContainerVisible.value = true;
+    orderDetails.updateCurrentCategory(category);
+
+    // currentCategory.value = category;
+    categories.value.forEach(
+      (cat) => (cat.isActive = cat.name === categoryName)
+    );
+  }
+};
+
+const goBack = () => {
+  if (!cartStore.isUpdate) {
+    router.push(`/${userStore.path}`);
+  } else {
+    cartStore.clearIsUpdate();
+    router.push(`/cart`);
+  }
+};
 
 const handleWheelEvent = (event) => {
   if (!extraBarInner.value) return;

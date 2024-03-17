@@ -1,7 +1,12 @@
 <template>
   <div class="cart-page-wrapper">
     <div class="cart-items-wrapper">
-      <div v-for="item in cartItems" :key="item.id" class="cart-item2">
+      <div
+        v-for="(item, index) in cartItems"
+        :key="item.id"
+        class="cart-item2"
+        @click="handleItemClick(item, index)"
+      >
         <img :src="item.photo" class="item-photo2" alt="Product Image" />
         <div class="item-content2">
           <div class="item-header2">
@@ -47,7 +52,27 @@ definePageMeta({
 import { computed } from "vue";
 
 const cartStore = useCart2Store();
+const orderDetails = useOrderStore();
+
 const cartItems = computed(() => cartStore.items);
+const router = useRouter();
+
+function handleItemClick(item, index) {
+  orderDetails.clearSelected();
+  cartStore.setIsUpdate(true, index);
+  orderDetails.setSelectSize(item.size);
+
+  // Восстанавливаем выбранные подкатегории
+  Object.entries(item.extras || {}).forEach(
+    ([categoryName, subCategoryNames]) => {
+      subCategoryNames.forEach((subCategoryName) => {
+        orderDetails.selectSubCategory(categoryName, subCategoryName, true);
+      });
+    }
+  );
+
+  router.push(`/${item.id}`);
+}
 </script>
 
 <style>
@@ -94,7 +119,7 @@ const cartItems = computed(() => cartStore.items);
   align-items: flex-start;
   border-bottom: 1px solid #ffffff; /* Темнее разделительная линия */
   padding-bottom: 10px;
-  margin-bottom: 10px;
+  margin-top: 10px;
 }
 
 .item-photo2 {

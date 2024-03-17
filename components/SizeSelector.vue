@@ -1,13 +1,13 @@
 <template>
   <div class="size-selector">
     <div
-      v-for="size in sizes"
+      v-for="(size, index) in props.sizes"
       :key="size.label"
       :class="{
         'size-option': true,
         selected: selectedSize.label === size.label,
       }"
-      @click="selectSize(size)"
+      @click="selectSize(index)"
     >
       <div
         class="size-content"
@@ -22,34 +22,43 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: "SizeSelector",
-  props: {
-    sizes: {
-      type: Array,
-      default: () => [
-        { label: "S", volume: "250ml", price: 0.0 },
-        { label: "M", volume: "500ml", price: 0.5 },
-        { label: "L", volume: "750ml", price: 0.95 },
-      ],
-    },
+<script setup>
+import { computed, watchEffect } from "vue";
+
+const props = defineProps({
+  sizes: {
+    type: Array,
+    default: () => [
+      { label: "S", volume: "250ml", price: 0.0 },
+      { label: "M", volume: "500ml", price: 0.5 },
+      { label: "L", volume: "750ml", price: 0.95 },
+    ],
   },
-  data() {
-    return {
-      selectedSize: this.sizes[0],
-    };
-  },
-  mounted() {
-    // Сразу после монтирования отправляем родительскому компоненту размер по умолчанию
-    this.$emit("update:selectedSize", this.selectedSize);
-  },
-  methods: {
-    selectSize(size) {
-      this.selectedSize = size;
-      this.$emit("update:selectedSize", size); // Отправляем событие с выбранным размером
-    },
-  },
+});
+
+const orderDetails = useOrderStore();
+const selectedSize = computed(
+  () => props.sizes[orderDetails.selectedSizeIndex]
+);
+
+onMounted(() => {
+  // Проверка, есть ли уже выбранный размер в хранилище, и если нет, то выбираем первый размер
+  if (orderDetails.selectedSize === null) {
+    selectSize(0);
+  } else {
+    // Эта часть кода гарантирует, что при повторном монтировании компонента выбранный размер будет отражать текущее состояние в `orderDetails`
+    const sizeIndex = props.sizes.findIndex(
+      (size) => size.label === orderDetails.selectedSize.label
+    );
+    if (sizeIndex !== -1) {
+      selectSize(sizeIndex);
+    }
+  }
+});
+
+const selectSize = (index) => {
+  orderDetails.setIndex(index);
+  orderDetails.setSelectSize(props.sizes[index]);
 };
 </script>
 
