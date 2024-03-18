@@ -10,7 +10,15 @@
       :class="{ selected: isSelected(subCategory) }"
       @click="selectSubCategory(subCategory)"
     >
-      <CupIcon class="sub-category-svg" />
+      <!-- Отображаем изображение, если svgPath не пустой -->
+      <img
+        v-if="subCategory.svgPath"
+        :src="subCategory.svgPath"
+        class="sub-category-svg"
+        alt="Subcategory image"
+      />
+      <!-- Отображаем CupIcon, если svgPath пустой -->
+      <CupIcon v-else class="sub-category-svg" />
       <div class="item-name text-sm font-semibold">
         {{ subCategory.name }}
       </div>
@@ -54,7 +62,8 @@ function selectSubCategory(subCategory) {
     orderStore.selectSubCategory(
       currentCategory.value.name,
       subCategory.name,
-      !currentlySelected
+      !currentlySelected,
+      subCategory.svgPath
     );
   } else {
     // Одиночный выбор: сбрасываем выбор для всех подкатегорий, затем выбираем текущую
@@ -68,7 +77,8 @@ function selectSubCategory(subCategory) {
     orderStore.selectSubCategory(
       currentCategory.value.name,
       subCategory.name,
-      !currentlySelected
+      !currentlySelected,
+      subCategory.svgPath
     );
   }
 }

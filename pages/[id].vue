@@ -67,26 +67,40 @@
         <div class="scroll-container">
           <div class="extra-bar-inner" ref="extraBarInner">
             <div
-              v-for="category in categories"
-              :key="category.name"
-              @click="selectCategory(category.name)"
+              v-for="categoryInfo in categoriesDisplayInfo"
+              :key="categoryInfo.name"
+              @click="selectCategory(categoryInfo.name)"
               :class="{
-                'is-active': category.isActive,
-                'is-inactive': !category.isActive,
+                'is-active': categoryInfo.isActive,
+                'is-inactive': !categoryInfo.isActive,
               }"
               class="category-item"
             >
               <div class="relative">
-                <CupIcon class="category-icon" />
                 <div
-                  v-show="category.additionalCount > 0"
-                  class="additional-count"
+                  v-if="categoryInfo.displayIcons.some((iconPath) => iconPath)"
+                  class="flex flex-col items-center justify-center"
                 >
-                  +{{ category.additionalCount }}
+                  <div
+                    v-show="categoryInfo.additionalCount > 0"
+                    class="additional-count"
+                  >
+                    +{{ categoryInfo.additionalCount }}
+                  </div>
+                  <div class="flex flex-row items-center justify-center">
+                    <img
+                      v-for="(iconPath, index) in categoryInfo.displayIcons"
+                      v-if="iconPath !== ''"
+                      :key="index"
+                      :src="iconPath"
+                      class="category-icon"
+                    />
+                  </div>
                 </div>
+                <CupIcon v-else class="category-icon" />
               </div>
 
-              <div class="category-name">{{ category.displayName }}</div>
+              <div class="category-name">{{ categoryInfo.displayText }}</div>
             </div>
           </div>
         </div>
@@ -97,7 +111,7 @@
         class="extra-container"
         :class="{ 'is-visible': isExtraContainerVisible }"
       >
-        <div class="absolute top-0 left-0 right-0 pt-10 px-5">
+        <div class="absolute top-0 left-0 right-0 mt-5 px-5">
           <div class="flex flex-row items-center justify-between">
             <div class="flex items-center">
               <button
@@ -149,7 +163,6 @@ import {
   handleDragging,
 } from "~/utils/dragToScroll";
 import { data } from "~/mock.ts";
-import cart from "./cart.vue";
 definePageMeta({
   layout: "product",
 });
@@ -163,8 +176,6 @@ const orderDetails = useOrderStore();
 const categories = ref(
   mockCategories.map((category) => ({
     ...category,
-    originalName: category.name,
-    displayName: category.name, // Это название будет обновляться
     additionalCount: 0, // Инициализируем счётчик дополнительных выборов
   }))
 );
@@ -190,6 +201,39 @@ onMounted(() => {
     );
     extraBarInner.value.addEventListener("wheel", handleWheelEvent);
   }
+});
+
+const categoriesDisplayInfo = computed(() => {
+  return categories.value.map((category) => {
+    const selections = orderDetails.subCategoriesSelections[category.name];
+    const selectedSubcategories = selections
+      ? Object.entries(selections)
+          .filter(([_, value]) => value.isSelected)
+          .map(([name, { svgPath }]) => ({ name, svgPath }))
+      : [];
+
+    let displayText = category.name; // Стандартное название категории
+    let displayIcons = [""]; // Путь к стандартной иконке категории
+    let additionalCount = 0;
+
+    if (selectedSubcategories.length === 1) {
+      // Если выбрана одна подкатегория, изменяем только название
+      displayText = selectedSubcategories[0].name;
+      displayIcons = [selectedSubcategories[0].svgPath]; // Добавляем иконку первой выбранной подкатегории
+    } else if (selectedSubcategories.length > 1) {
+      // Если выбрано две и более подкатегории, показываем иконки первых двух и стандартное название
+      displayText = category.name;
+      displayIcons = selectedSubcategories.slice(0, 2).map((s) => s.svgPath);
+      additionalCount = Math.max(selectedSubcategories.length - 2, 0);
+    }
+
+    return {
+      ...category,
+      displayText,
+      displayIcons,
+      additionalCount,
+    };
+  });
 });
 
 const item = computed(() => {
@@ -231,14 +275,22 @@ const increment = () => {
   // Собираем все выбранные подкатегории, используя данные из стора order
   const allSelectedExtras = Object.entries(
     orderDetails.subCategoriesSelections
-  ).reduce((acc, [categoryName, selections]) => {
-    // Фильтруем выбранные подкатегории
-    const selectedSubcategories = Object.entries(selections)
-      .filter(([subCategoryName, isSelected]) => isSelected)
-      .map(([subCategoryName]) => subCategoryName);
+  ).reduce((acc, [categoryName, subCategories]) => {
+    // Инициализируем категорию с пустым массивом
+    acc[categoryName] = [];
 
-    if (selectedSubcategories.length > 0) {
-      acc[categoryName] = selectedSubcategories;
+    Object.entries(subCategories).forEach(
+      ([subCategoryName, { isSelected, svgPath }]) => {
+        if (isSelected) {
+          // Для каждой выбранной подкатегории сохраняем название и svgPath
+          acc[categoryName].push({ name: subCategoryName, svgPath });
+        }
+      }
+    );
+
+    // Удаляем категории без выбранных подкатегорий
+    if (acc[categoryName].length === 0) {
+      delete acc[categoryName];
     }
 
     return acc;
@@ -322,9 +374,12 @@ const handleWheelEvent = (event) => {
 }
 
 .additional-count {
-  position: absolute; /* Изменено с fixed на absolute */
-  bottom: 0px;
-  right: 0px;
+  position: absolute;
+  bottom: 0; /* Расположение внизу */
+  left: 50%; /* Смещение влево на 50% от ширины родительского элемента */
+  transform: translateX(
+    -50%
+  ); /* Сдвиг элемента назад на 50% его собственной ширины для центрирования */
   background-color: #3b82f6; /* Белый фон */
   color: #fff; /* Черный текст */
   font-size: 0.8rem; /* Меньший размер текста для вписывания в круг */
@@ -398,6 +453,10 @@ const handleWheelEvent = (event) => {
   transition: transform 0.4s ease;
   transform-origin: bottom;
   transform: scale(1);
+}
+
+.extra-icon {
+  height: 5rem;
 }
 
 .category-item.is-active .category-icon {

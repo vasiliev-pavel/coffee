@@ -24,9 +24,14 @@
             >
               <div class="category-name2">{{ category }}:</div>
               <div class="extras-list2">
-                <span v-for="extra in extras" :key="extra" class="extra-name2"
-                  >+ {{ extra }}</span
+                <!-- Теперь extra это объект, так что нам нужно использовать extra.name -->
+                <span
+                  v-for="extra in extras"
+                  :key="extra.name"
+                  class="extra-name2"
                 >
+                  + {{ extra.name }}
+                </span>
               </div>
             </div>
           </div>
@@ -65,13 +70,16 @@ function handleItemClick(item, index) {
   orderDetails.setSelectSize(item.size);
 
   // Восстанавливаем выбранные подкатегории
-  Object.entries(item.extras || {}).forEach(
-    ([categoryName, subCategoryNames]) => {
-      subCategoryNames.forEach((subCategoryName) => {
-        orderDetails.selectSubCategory(categoryName, subCategoryName, true);
-      });
-    }
-  );
+  Object.entries(item.extras || {}).forEach(([categoryName, extras]) => {
+    extras.forEach(({ name: subCategoryName, svgPath }) => {
+      orderDetails.selectSubCategory(
+        categoryName,
+        subCategoryName,
+        true,
+        svgPath
+      );
+    });
+  });
 
   router.push(`/${item.id}`);
 }

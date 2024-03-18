@@ -18,11 +18,18 @@ export const useOrderStore = defineStore('order', {
     updateCurrentCategory(category) {
       this.currentCategory = category;
     },
-    selectSubCategory(categoryName, subCategoryName, isSelected) {
+    selectSubCategory(categoryName, subCategoryName, isSelected, svgPath) {
       if (!this.subCategoriesSelections[categoryName]) {
         this.subCategoriesSelections[categoryName] = {};
       }
-      this.subCategoriesSelections[categoryName][subCategoryName] = isSelected;
+      if (isSelected) {
+        this.subCategoriesSelections[categoryName][subCategoryName] = {
+          isSelected,
+          svgPath
+        };
+      } else {
+        delete this.subCategoriesSelections[categoryName][subCategoryName];
+      }
     },
 
     clearSelected() {
