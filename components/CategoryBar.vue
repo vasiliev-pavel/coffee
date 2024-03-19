@@ -1,6 +1,6 @@
 <template>
   <div
-    class="category-bar flex md:sticky md:top-2 lg:sticky lg:top-2 left-0 right-0 z-50 md:rounded lg:rounded fixed bottom-0 top-auto"
+    class="category-bar flex md:sticky md:top-2 lg:sticky lg:top-2 left-0 right-0 z-50 md:rounded lg:rounded fixed bottom-0 top-auto text-xl"
     ref="categoryBar"
   >
     <NuxtLink

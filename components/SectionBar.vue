@@ -9,7 +9,7 @@
         :to="`/${item.id}`"
         v-for="(item, index) in items"
         :key="item.id"
-        class="item rounded-lg overflow-hidden"
+        class="item rounded-[1.5rem] overflow-hidden"
       >
         <template v-if="index === 0">
           <div class="video-container relative w-full h-full min-h-[50vh]">
@@ -38,10 +38,12 @@
         </template>
 
         <template v-else>
-          <div class="flex flex-col p-6">
-            <img :src="item.photo" :alt="item.name" class="w-full h-auto" />
-            <h3>{{ item.name }}</h3>
-            <p>${{ item.price }}</p>
+          <div class="main-item-container p-5 font-medium font-kanit">
+            <img :src="item.photo" :alt="item.name" class="main-item-image" />
+            <div class="main-text-container">
+              <h3 class="main-item-name">{{ item.name }}</h3>
+              <p class="main-item-price text-xl">${{ item.price }}</p>
+            </div>
           </div>
         </template>
       </NuxtLink>
@@ -116,5 +118,39 @@ export default {
 .section-items .item:first-child {
   grid-column: span 2;
   grid-row: span 2;
+}
+.main-item-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* Обеспечивает распределение пространства между изображением и текстовым контентом */
+}
+
+.main-item-image {
+  width: 100%; /* Поддерживает ширину изображения */
+  object-fit: cover; /* Обеспечивает заполнение пространства изображением без искажения */
+  height: auto; /* Поддерживает адаптивную высоту изображения */
+}
+
+.main-text-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* Распределяет текст внутри контейнера */
+  height: 6em; /* Ограничивает максимальную высоту текстового блока */
+  overflow: hidden; /* Скрывает текст, выходящий за пределы */
+}
+
+.main-item-name {
+  display: flex;
+  align-items: center; /* Выравнивает текст по центру по вертикали */
+  height: 4em; /* Фиксированная высота для поддержания до 3 строк */
+  text-align: left; /* Выравнивание текста по левому краю */
+  align-self: flex-start; /* Прижимает к левому краю */
+  -webkit-box-orient: vertical;
+  margin: 0; /* Убираем маржин, если он был задан */
+  width: calc(100% - 10px); /* Учитываем отступ в ширине */
+}
+
+.main-item-price {
+  align-self: flex-start; /* Прижимает к левому краю */
 }
 </style>

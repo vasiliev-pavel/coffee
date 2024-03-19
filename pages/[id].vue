@@ -481,8 +481,8 @@ const handleWheelEvent = (event) => {
   transform: translateY(-100%);
   transition: transform 0.5s ease-in-out;
   z-index: 5;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); /* Пример мягкой тени */
-  background-color: #dddddd;
+  box-shadow: 0px 4px 8px rgba(85, 85, 85, 0.2); /* Пример мягкой тени */
+  background-color: #e7e7e7;
   height: 67vh;
   justify-content: center;
   align-items: center;

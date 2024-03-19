@@ -76,7 +76,7 @@ const selectSize = (index) => {
 .size-selector {
   display: inline-flex;
   align-items: center;
-  background-color: #f0f0f0;
+  background-color: #f5f5f5;
   border-radius: 9999px;
 }
 
