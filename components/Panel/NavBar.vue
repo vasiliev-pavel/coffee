@@ -10,18 +10,33 @@
 
 <script setup>
 import { ref } from "vue";
+
 const mockpanels = [
-    { name: "Home", path: '/panel', isActive: false, svgPath: "" },
-    { name: "Reports", path: '/panel/reports', isActive: false, svgPath: "" },
-    { name: "Menu", path: '/panel/menu', isActive: false, svgPath: "" },
+    { name: "⌂ Home", path: '/panel', isActive: false, svgPath: "" },
+    { name: "𐚤 Menu", path: '/panel/menu', isActive: false, svgPath: "" },
     { name: "Payments", path: '/panel/payments', isActive: false, svgPath: "" },
-    { name: "Tools", path: '/panel/tools', isActive: false, svgPath: "" },
+    { name: "⚙ Settings", path: '/panel/settings', isActive: false, svgPath: "" },
 ];
 
 
 const panels = ref(mockpanels);
-
 const panelBar = ref(null);
+const route = useRoute();
+
+
+const updateActivePanel = () => {
+    panels.value.forEach(panel => {
+        panel.isActive = route.path === panel.path;
+    });
+};
+
+// Немедленно обновляем активную панель при монтировании
+updateActivePanel();
+
+// Наблюдаем за изменениями в маршруте
+watch(() => route.path, () => {
+    updateActivePanel();
+});
 </script>
 
 <style>
@@ -61,6 +76,6 @@ const panelBar = ref(null);
 }
 
 .panel-bar>a.is-inactive {
-    color: #a5a5a5;
+    color: #c5c5c5;
 }
 </style>

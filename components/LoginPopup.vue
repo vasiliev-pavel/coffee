@@ -1,10 +1,7 @@
 <template>
   <transition name="modal">
-    <div
-      v-if="isOpen"
-      class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-20"
-      @click="startClosing"
-    >
+    <div v-if="isOpen" class="fixed inset-0 bg-gray-900 bg-opacity-50 overflow-y-auto h-full w-full z-20"
+      @click="startClosing">
       <div class="login-container" @click.stop>
         <div class="branding-container" v-show="isOpen">
           <h1 class="branding-title leading-none font-medium">
@@ -14,21 +11,16 @@
         <div class="login-block">
           <div class="title text-[2rem] mb-4 font-medium">Continue with</div>
           <div class="button-container">
-            <button
-              class="login-btn google active:scale-95 transition duration-150 ease-in-out"
-              @click="signInWithGoogle"
-            >
+            <button class="login-btn google active:scale-95 transition duration-150 ease-in-out"
+              @click="signInWithGoogle">
               <GoogleIcon />
             </button>
-            <button
-              class="login-btn apple active:scale-95 transition duration-150 ease-in-out"
-            >
+            <button class="login-btn apple active:scale-95 transition duration-150 ease-in-out">
               <AppleIcon />
             </button>
-            <button
-              class="no-account active:scale-95 transition duration-150 ease-in-out"
-            >
-              Continue without login <ArrowIcon />
+            <button @click="startClosing" class="no-account active:scale-95 transition duration-150 ease-in-out">
+              Continue without login
+              <ArrowIcon />
             </button>
           </div>
         </div>
@@ -72,7 +64,8 @@ const signInWithGoogle = async () => {
 
 <style>
 .branding-container {
-  display: none; /* Скрыт по умолчанию */
+  display: none;
+  /* Скрыт по умолчанию */
 }
 
 .login-container {
@@ -141,8 +134,10 @@ const signInWithGoogle = async () => {
 /* Медиа-запросы для адаптации под мобильные устройства */
 @media (max-width: 768px) {
   .modal {
-    height: 33%; /* Занимает одну треть экрана на мобильных устройствах */
-    bottom: 0; /* Позиционирование снизу */
+    height: 33%;
+    /* Занимает одну треть экрана на мобильных устройствах */
+    bottom: 0;
+    /* Позиционирование снизу */
   }
 }
 
@@ -154,42 +149,60 @@ const signInWithGoogle = async () => {
     left: 50%;
     transform: translate(-50%, -50%);
     width: auto;
-    max-width: 430px; /* Максимальная ширина контейнера */
-    height: auto; /* Высота по содержимому */
-    animation: none !important; /* Отключаем анимацию для .login-container */
-    border-radius: 1rem; /* Скругление углов */
+    max-width: 430px;
+    /* Максимальная ширина контейнера */
+    height: auto;
+    /* Высота по содержимому */
+    animation: none !important;
+    /* Отключаем анимацию для .login-container */
+    border-radius: 1rem;
+    /* Скругление углов */
     padding: 0;
   }
 
   .branding-container {
     display: flex;
-    align-items: center; /* Выравнивание по вертикали */
-    justify-content: flex-start; /* Выравнивание по горизонтали */
-    padding-left: 2rem; /* Отступ слева */
+    align-items: center;
+    /* Выравнивание по вертикали */
+    justify-content: flex-start;
+    /* Выравнивание по горизонтали */
+    padding-left: 2rem;
+    /* Отступ слева */
     background-color: #4a90e2;
     width: 100%;
     height: 50%;
-    z-index: 31; /* Выше фона, но ниже кнопок входа */
+    z-index: 31;
+    /* Выше фона, но ниже кнопок входа */
     border-top-left-radius: 1rem;
     border-top-right-radius: 1rem;
     border-bottom: 4px solid #ffffff;
   }
+
   .login-block {
-    flex: 1; /* Блок растянется на всю доступную высоту */
-    width: 100%; /* Ширина равна ширине родителя */
+    flex: 1;
+    /* Блок растянется на всю доступную высоту */
+    width: 100%;
+    /* Ширина равна ширине родителя */
     display: flex;
-    flex-direction: column; /* Направление основной оси */
-    justify-content: center; /* Выравнивание содержимого по центру */
-    text-align: center; /* Выравнивание текста по центру */
+    flex-direction: column;
+    /* Направление основной оси */
+    justify-content: center;
+    /* Выравнивание содержимого по центру */
+    text-align: center;
+    /* Выравнивание текста по центру */
   }
+
   .branding-title {
     color: #ffffff;
-    font-size: 2rem; /* Вы можете настроить размер шрифта по своему усмотрению */
+    font-size: 2rem;
+    /* Вы можете настроить размер шрифта по своему усмотрению */
   }
+
   .title {
     font-size: 1.8rem;
     padding-left: 2rem;
   }
+
   .button-container {
     padding-left: 2rem;
   }
@@ -199,6 +212,7 @@ const signInWithGoogle = async () => {
   from {
     transform: translateY(100%);
   }
+
   to {
     transform: translateY(0);
   }
@@ -208,6 +222,7 @@ const signInWithGoogle = async () => {
   0% {
     transform: translateY(0);
   }
+
   100% {
     transform: translateY(100%);
   }
@@ -216,7 +231,8 @@ const signInWithGoogle = async () => {
 /* Анимации только для модального окна, без сдвига тени */
 .login-container {
   /* ваш текущий CSS для .login-container */
-  animation: slideUp 0.3s ease-out; /* Только для появления */
+  animation: slideUp 0.3s ease-out;
+  /* Только для появления */
 }
 
 /* Анимация исчезновения для модального окна */
@@ -233,6 +249,7 @@ const signInWithGoogle = async () => {
 .modal-leave-active {
   opacity: 0;
 }
+
 .modal-enter-from,
 .modal-leave-to {
   opacity: 0;

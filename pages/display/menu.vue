@@ -1,10 +1,10 @@
 <template>
-    <h1>{{ currentCategoryName }} {{ countdown }}</h1>
-    <div class="display-menu">
-        <div class="display-element" v-for="item in  currentCategory " :key="item.id">
+    <h1 class="label-menu">{{ currentCategoryName }} {{ countdown }}</h1>
+    <div class="display-menu gap-10">
+        <div class="display-element rounded-lg" v-for="item in  currentCategory " :key="item.id">
             <div class="display-element-media">
-                <video autoplay muted loop playsinline class="w-full h-full object-cover"
-                    :src="`/_nuxt/` + item.videoSrc" :alt="item.name" />
+                <video autoplay muted loop playsinline class="w-full h-full object-cover" :src="`/` + item.videoSrc"
+                    :alt="item.name" />
             </div>
             <div class="display-element-badge">
                 <h2>{{ item.name }}</h2>
@@ -76,17 +76,29 @@ onUnmounted(() => {
 
 
 <style>
+.label-menu {
+    position: fixed;
+    left: 0%;
+    top: 10%;
+    white-space: nowrap;
+    writing-mode: vertical-lr;
+    transform: rotate(180deg);
+}
+
 .display-menu {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     grid-template-rows: repeat(2, minmax(0, 1fr));
     transition: 0.5s all;
-    height: 80vh;
+    height: 97vh;
     overflow: hidden;
+    margin-top: -10px;
 }
 
 .display-element {
     display: grid;
+    border-radius: 1.5rem;
+    overflow: hidden;
     grid-column: span 1;
     grid-row: span 1;
     transition: 0.5s all;
@@ -103,11 +115,12 @@ onUnmounted(() => {
 
 .display-element-badge {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     font-weight: bold;
-    justify-content: flex-end;
+    align-items: flex-end;
+    justify-content: space-between;
     padding: 2rem;
-    font-size: 2rem;
+    font-size: 3rem;
     position: absolute;
     left: 0;
     right: 0;

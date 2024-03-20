@@ -1,19 +1,12 @@
 <template>
   <div
     class="category-bar flex md:sticky md:top-2 lg:sticky lg:top-2 left-0 right-0 z-10 md:rounded lg:rounded fixed bottom-0 top-auto text-xl"
-    ref="categoryBar"
-  >
-    <NuxtLink
-      v-for="category in categories"
-      :key="category.hash"
-      :to="{ path: '/', hash: category.hash }"
-      @click="centerCategory($event, category.hash)"
-      :class="{
-        'is-active': category.isActive,
-        'is-inactive': !category.isActive,
-      }"
-      >{{ category.name }}</NuxtLink
-    >
+    ref="categoryBar">
+    <NuxtLink v-for="category in categories" :key="category.hash" :to="{ path: '/', hash: category.hash }"
+      @click="centerCategory($event, category.hash)" :class="{
+      'is-active': category.isActive,
+      'is-inactive': !category.isActive,
+    }">{{ category.name }}</NuxtLink>
   </div>
 </template>
 
@@ -64,7 +57,7 @@ const centerCategory = (event, categoryHash) => {
   /* Chrome, Safari и Opera */
 }
 
-.category-bar > a {
+.category-bar>a {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -75,12 +68,12 @@ const centerCategory = (event, categoryHash) => {
   text-align: center;
 }
 
-.category-bar > a.is-active {
+.category-bar>a.is-active {
   font-weight: bold;
   color: #ffffff;
 }
 
-.category-bar > a.is-inactive {
-  color: #a5a5a5;
+.category-bar>a.is-inactive {
+  color: #c5c5c5;
 }
 </style>

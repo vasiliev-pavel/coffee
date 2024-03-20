@@ -1,48 +1,27 @@
 <template>
-  <section>
+  <section class="item-bar">
     <section class="grid grid-cols-1">
       <!-- Левая часть -->
-      <div class="col-span-1 h-[60vh] relative">
+      <div class="col-span-1 h-[64vh] relative">
         <Transition name="fade">
-          <CloseIcon
-            v-show="!isExtraContainerVisible"
-            @click="goBack"
-            class="absolute top-0 right-0 m-5 z-10 hover:scale-110 active:scale-95 transition duration-150 ease-in-out"
-        /></Transition>
+          <CloseIcon v-show="!isExtraContainerVisible" @click="goBack"
+            class="absolute top-0 right-0 m-5 z-10 hover:scale-110 active:scale-95 transition duration-150 ease-in-out" />
+        </Transition>
         <section>
-          <video
-            v-if="item.videoSrc"
-            autoplay
-            muted
-            loop
-            playsinline
-            class="absolute top-0 h-full w-full object-cover z-0"
-            :src="item.videoSrc"
-            :alt="item.name"
-          ></video>
+          <video v-if="item.videoSrc" autoplay muted loop playsinline
+            class="absolute top-0 h-full w-full object-cover z-0" :src="item.videoSrc" :alt="item.name"></video>
 
-          <img
-            v-else
-            :src="item.photo"
-            :alt="item.name"
-            class="absolute top-0 h-full w-full object-cover z-0"
-          />
+          <img v-else :src="item.photo" :alt="item.name" class="absolute top-0 h-full w-full object-cover z-0" />
           <div
-            class="z-0 absolute bottom-0 left-0 right-0 p-5 bg-gradient-to-t from-[#e8e8e8] via-[#e8e8e8b4] to-transparent"
-          >
+            class="z-0 absolute bottom-0 left-0 right-0 p-5 bg-gradient-to-t from-[#e8e8e8] via-[#e8e8e8b4] to-transparent">
             <h3 class="font-medium text-3xl mb-5 text-[#4A4949]">
               {{ item.name }}
             </h3>
             <div class="flex flex-row items-center justify-between">
               <div class="flex items-center">
-                <button
-                  @click="increment"
-                  class="button_plus bg-blue-500 hover:bg-blue-600 text-white font-bold p-4 rounded-full"
-                >
-                  <PlusIcon
-                    v-if="!cartStore.isUpdate"
-                    class="h-[2rem] w-[2rem]"
-                  />
+                <button @click="increment"
+                  class="button_plus bg-blue-500 hover:bg-blue-600 text-white font-bold p-4 rounded-full">
+                  <PlusIcon v-if="!cartStore.isUpdate" class="h-[2rem] w-[2rem]" />
                   <UpdateIcon v-else class="h-[2rem] w-[2rem]" />
                 </button>
 
@@ -66,35 +45,20 @@
       <div class="extra-bar" ref="extraBar">
         <div class="scroll-container">
           <div class="extra-bar-inner" ref="extraBarInner">
-            <div
-              v-for="categoryInfo in categoriesDisplayInfo"
-              :key="categoryInfo.name"
-              @click="selectCategory(categoryInfo.name)"
-              :class="{
-                'is-active': categoryInfo.isActive,
-                'is-inactive': !categoryInfo.isActive,
-              }"
-              class="category-item"
-            >
+            <div v-for="categoryInfo in categoriesDisplayInfo" :key="categoryInfo.name"
+              @click="selectCategory(categoryInfo.name)" :class="{
+            'is-active': categoryInfo.isActive,
+            'is-inactive': !categoryInfo.isActive,
+          }" class="category-item">
               <div class="relative">
-                <div
-                  v-if="categoryInfo.displayIcons.some((iconPath) => iconPath)"
-                  class="flex flex-col items-center justify-center"
-                >
-                  <div
-                    v-show="categoryInfo.additionalCount > 0"
-                    class="additional-count"
-                  >
+                <div v-if="categoryInfo.displayIcons.some((iconPath) => iconPath)"
+                  class="flex flex-col items-center justify-center">
+                  <div v-show="categoryInfo.additionalCount > 0" class="additional-count">
                     +{{ categoryInfo.additionalCount }}
                   </div>
                   <div class="flex flex-row items-center justify-center">
-                    <img
-                      v-for="(iconPath, index) in categoryInfo.displayIcons"
-                      v-if="iconPath !== ''"
-                      :key="index"
-                      :src="iconPath"
-                      class="category-icon"
-                    />
+                    <img v-for="(iconPath, index) in categoryInfo.displayIcons" v-if="iconPath !== ''" :key="index"
+                      :src="iconPath" class="category-icon" />
                   </div>
                 </div>
                 <CupIcon v-else class="category-icon" />
@@ -107,21 +71,13 @@
       </div>
 
       <!-- Контейнер с выбором -->
-      <div
-        class="extra-container"
-        :class="{ 'is-visible': isExtraContainerVisible }"
-      >
+      <div class="extra-container" :class="{ 'is-visible': isExtraContainerVisible }">
         <div class="absolute top-0 left-0 right-0 mt-5 px-5">
           <div class="flex flex-row items-center justify-between">
             <div class="flex items-center">
-              <button
-                @click="increment"
-                class="button_plus bg-blue-500 hover:bg-blue-600 text-white font-bold p-4 rounded-full"
-              >
-                <PlusIcon
-                  v-if="!cartStore.isUpdate"
-                  class="h-[2rem] w-[2rem]"
-                />
+              <button @click="increment"
+                class="button_plus bg-blue-500 hover:bg-blue-600 text-white font-bold p-4 rounded-full">
+                <PlusIcon v-if="!cartStore.isUpdate" class="h-[2rem] w-[2rem]" />
                 <UpdateIcon v-else class="h-[2rem] w-[2rem]" />
               </button>
 
@@ -133,14 +89,10 @@
             <SizeSelector />
           </div>
         </div>
-        <SubcategoryBar
-          v-if="
-            currentCategory &&
+        <SubcategoryBar v-if="currentCategory &&
             currentCategory.subCategories &&
             currentCategory.subCategories.length > 0
-          "
-          class="mt-16"
-        />
+            " class="mt-16" />
       </div>
 
       <!-- хорошо сочетается-->
@@ -208,8 +160,8 @@ const categoriesDisplayInfo = computed(() => {
     const selections = orderDetails.subCategoriesSelections[category.name];
     const selectedSubcategories = selections
       ? Object.entries(selections)
-          .filter(([_, value]) => value.isSelected)
-          .map(([name, { svgPath }]) => ({ name, svgPath }))
+        .filter(([_, value]) => value.isSelected)
+        .map(([name, { svgPath }]) => ({ name, svgPath }))
       : [];
 
     let displayText = category.name; // Стандартное название категории
@@ -354,13 +306,29 @@ const handleWheelEvent = (event) => {
 </script>
 
 <style>
+@media (min-width: 640px) and (max-width: 1024px) {
+  .item-bar {
+    width: 70%;
+    margin: auto;
+  }
+}
+
+@media (min-width: 1024px) and (max-width: 1439px) {
+  .item-bar {
+    width: 700px;
+    margin: auto;
+  }
+}
+
 .button_plus {
   transition: transform 0.1s ease-in-out, box-shadow 0.1s ease-in-out;
 }
 
 .button_plus:active {
-  transform: scale(0.95); /* Уменьшаем кнопку при нажатии */
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Добавляем тень для большего акцента на кнопке */
+  transform: scale(0.95);
+  /* Уменьшаем кнопку при нажатии */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  /* Добавляем тень для большего акцента на кнопке */
 }
 
 .fade-enter-active,
@@ -375,20 +343,30 @@ const handleWheelEvent = (event) => {
 
 .additional-count {
   position: absolute;
-  bottom: 0; /* Расположение внизу */
-  left: 50%; /* Смещение влево на 50% от ширины родительского элемента */
-  transform: translateX(
-    -50%
-  ); /* Сдвиг элемента назад на 50% его собственной ширины для центрирования */
-  background-color: #3b82f6; /* Белый фон */
-  color: #fff; /* Черный текст */
-  font-size: 0.8rem; /* Меньший размер текста для вписывания в круг */
-  width: 30px; /* Фиксированная ширина для создания круга */
-  height: 30px; /* Фиксированная высота для создания круга */
-  line-height: 30px; /* Высота строки соответствует высоте для вертикального центрирования текста */
-  text-align: center; /* Горизонтальное выравнивание текста */
-  border-radius: 50%; /* Превращает квадрат в круг */
-  z-index: 50; /* Убедитесь, что элемент находится поверх других элементов */
+  bottom: 0;
+  /* Расположение внизу */
+  left: 50%;
+  /* Смещение влево на 50% от ширины родительского элемента */
+  transform: translateX(-50%);
+  /* Сдвиг элемента назад на 50% его собственной ширины для центрирования */
+  background-color: #3b82f6;
+  /* Белый фон */
+  color: #fff;
+  /* Черный текст */
+  font-size: 0.8rem;
+  /* Меньший размер текста для вписывания в круг */
+  width: 30px;
+  /* Фиксированная ширина для создания круга */
+  height: 30px;
+  /* Фиксированная высота для создания круга */
+  line-height: 30px;
+  /* Высота строки соответствует высоте для вертикального центрирования текста */
+  text-align: center;
+  /* Горизонтальное выравнивание текста */
+  border-radius: 50%;
+  /* Превращает квадрат в круг */
+  z-index: 50;
+  /* Убедитесь, что элемент находится поверх других элементов */
 }
 
 .extra-bar {
@@ -402,6 +380,7 @@ const handleWheelEvent = (event) => {
 .extra-bar::-webkit-scrollbar {
   display: none;
 }
+
 .scroll-container {
   padding-top: 1.25rem;
   overflow-x: auto;
@@ -410,11 +389,15 @@ const handleWheelEvent = (event) => {
 .extra-bar-inner {
   display: flex;
   flex-direction: row;
-  flex-wrap: nowrap; /* Убедитесь, что элементы не оборачиваются */
-  -ms-overflow-style: none; /* IE и Edge */
-  scrollbar-width: none; /* Firefox */
+  flex-wrap: nowrap;
+  /* Убедитесь, что элементы не оборачиваются */
+  -ms-overflow-style: none;
+  /* IE и Edge */
+  scrollbar-width: none;
+  /* Firefox */
 }
-.extra-bar-inner > div {
+
+.extra-bar-inner>div {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -427,14 +410,15 @@ const handleWheelEvent = (event) => {
   /* Chrome, Safari и Opera */
 }
 
-.extra-bar-inner > div.is-active {
+.extra-bar-inner>div.is-active {
   font-weight: 500;
   color: #4a4949;
 }
 
-.extra-bar-inner > div.is-inactive {
+.extra-bar-inner>div.is-inactive {
   color: #a5a5a5;
 }
+
 .category-item {
   display: flex;
   flex-direction: column;
@@ -465,7 +449,9 @@ const handleWheelEvent = (event) => {
 }
 
 .category-name {
-  font-size: 1.125rem /* 18px */;
+  font-size: 1.125rem
+    /* 18px */
+  ;
   min-height: 3em;
   display: flex;
   flex-direction: column;
@@ -481,7 +467,8 @@ const handleWheelEvent = (event) => {
   transform: translateY(-100%);
   transition: transform 0.5s ease-in-out;
   z-index: 5;
-  box-shadow: 0px 4px 8px rgba(85, 85, 85, 0.2); /* Пример мягкой тени */
+  box-shadow: 0px 4px 8px rgba(85, 85, 85, 0.2);
+  /* Пример мягкой тени */
   background-color: #e7e7e7;
   height: 67vh;
   justify-content: center;
