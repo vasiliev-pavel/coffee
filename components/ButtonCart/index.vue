@@ -76,7 +76,7 @@ function goToCart() {
   bottom: 12%;
   left: 0;
   right: 0;
-  z-index: 50;
+  z-index: 10;
 }
 
 .pay-button-cart {

@@ -83,6 +83,55 @@ function handleItemClick(item, index) {
 
   router.push(`/${item.id}`);
 }
+
+const confirmPay = async () => {
+  try {
+    // Запрашиваем сессию Stripe для оплаты
+    const { data: session } = await useFetch(`/api/payment/`, {
+      method: "post",
+      body: {
+        line_items: await createLineItems(),
+      },
+    });
+    // Перенаправляем пользователя на Stripe
+    if (session && session.value.url) {
+      navigateTo(`${session.value.url}`, { external: true });
+    } else {
+      console.error("Ошибка: URL сессии Stripe не получен");
+    }
+  } catch (error) {
+    console.error("Ошибка при инициации сессии оплаты:", error);
+  }
+};
+
+const createPrice = async () => {
+  try {
+    const price = await $fetch(`/api/payment/price`, {
+      method: "post",
+      body: {
+        amount: 100,
+        name: "Cappuccino",
+      },
+    });
+    console.log(price);
+    return price.id;
+  } catch (error) {
+    console.error("Ошибка при создании цены:", error);
+  }
+};
+
+const createLineItems = async () => {
+  return [
+    {
+      price: await createPrice(),
+      quantity: 1,
+    },
+  ];
+  //   return Object.values(selectedServices).map((service) => ({
+  //     price: service.price_id,
+  //     quantity: 1,
+  //   }));
+};
 </script>
 
 <style>
