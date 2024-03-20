@@ -1,13 +1,13 @@
-// import { serverSupabaseClient } from "#supabase/server";
+import { serverSupabaseClient } from "#supabase/server";
 
-// export default defineEventHandler(async (event) => {
-//   const client = await serverSupabaseClient(event);
-//   const body = await readBody(event);
-//   if (!body) {
-//     return { error: "body are required" };
-//   }
+export default defineEventHandler(async (event) => {
+    //   const client = await serverSupabaseClient(event);
+    //   const body = await readBody(event);
+    //   if (!body) {
+    //     return { error: "body are required" };
+    //   }
 
-//   const { error } = await client.from("orders").insert(body);
-//   // console.error(error);
-//   return { error };
-// });
+    //   const { error } = await client.from("orders").insert(body);
+    //   // console.error(error);
+    //   return { error };
+});
