@@ -109,7 +109,7 @@
 
       <!-- Контейнер с выбором -->
       <div
-        class="extra-container"
+        class=".extra-container-product"
         :class="{ 'is-visible': isExtraContainerVisible }"
       >
         <div class="absolute top-0 left-0 right-0 mt-5 px-5">
@@ -505,7 +505,7 @@ const handleWheelEvent = (event) => {
   justify-content: center;
 }
 
-.extra-container {
+.extra-container-product {
   position: fixed;
   top: 0;
   right: 0;
@@ -517,13 +517,13 @@ const handleWheelEvent = (event) => {
   box-shadow: 0px 4px 8px rgba(85, 85, 85, 0.2);
   /* Пример мягкой тени */
   background-color: #e7e7e7;
-  height: 70vh;
+  height: 67vh;
   justify-content: center;
   align-items: center;
   display: flex;
 }
 
-.extra-container.is-visible {
+.extra-container-product.is-visible {
   transform: translateY(0%);
 }
 </style>
