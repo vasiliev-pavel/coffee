@@ -1,5 +1,5 @@
 <template>
-    <h1>Panel</h1>
+    <h1>Payment</h1>
 </template>
 <script setup>
 definePageMeta({
