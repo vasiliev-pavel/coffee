@@ -109,7 +109,7 @@
 
       <!-- Контейнер с выбором -->
       <div
-        class=".extra-container-product"
+        class="extra-container-product"
         :class="{ 'is-visible': isExtraContainerVisible }"
       >
         <div class="absolute top-0 left-0 right-0 mt-5 px-5">
