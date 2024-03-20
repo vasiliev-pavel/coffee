@@ -44,7 +44,8 @@ const currentCategory = computed(() => orderStore.currentCategory);
 // Вычисляем количество столбцов на основе количества подкатегорий в текущей категории
 const columnsCount = computed(() => {
   const subCategories = currentCategory.value?.subCategories || [];
-  return subCategories.length < 3 ? 2 : 3;
+  // Если элементов меньше или равно 6, то должно быть 3 колонки
+  return subCategories.length <= 6 ? Math.min(3, subCategories.length) : "auto";
 });
 
 // Определяем, выбрана ли подкатегория
@@ -98,8 +99,9 @@ function selectSubCategory(subCategory) {
 }
 
 .grid-container {
-  display: grid;
-  /* grid-template-columns: repeat(3, 1fr); */
+  display: flex;
+  flex-wrap: wrap;
+  overflow-x: auto;
   gap: 0.5rem;
 }
 
@@ -114,6 +116,7 @@ function selectSubCategory(subCategory) {
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   cursor: pointer;
   transition: 0.1s all;
+  flex: 0 0 auto; /* Важно для предотвращения сжатия элементов при прокрутке */
 }
 
 /* .sub-category:hover {
