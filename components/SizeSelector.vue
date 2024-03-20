@@ -29,9 +29,9 @@ const props = defineProps({
   sizes: {
     type: Array,
     default: () => [
-      { label: "S", volume: "250ml", price: 0.0 },
-      { label: "M", volume: "500ml", price: 0.5 },
-      { label: "L", volume: "750ml", price: 0.95 },
+      { label: "S", volume: "8oz", price: 0.0 },
+      { label: "M", volume: "12oz", price: 0.5 },
+      { label: "L", volume: "16oz", price: 0.95 },
     ],
   },
 });
@@ -71,7 +71,7 @@ const selectSize = (index) => {
 
 .size-volume {
   font-weight: 500;
-  font-size: 0.75rem;
+  font-size: 0.8rem;
 }
 .size-selector {
   display: inline-flex;
@@ -111,7 +111,9 @@ const selectSize = (index) => {
 .size-content.is-selected {
   background-color: rgb(59 130 246);
   color: #f0f0f0;
-  padding: 0.8rem;
+  padding: 0.75rem;
+  width: 3.35rem;
+  height: 3.35rem;
   border-radius: 9999px;
   transform: translate(-50%, -50%) scale(1.2);
 }
@@ -135,7 +137,7 @@ const selectSize = (index) => {
   }
 
   .size-volume {
-    font-size: 0.625rem; /* Уменьшаем размер шрифта */
+    font-size: 0.675rem; /* Уменьшаем размер шрифта */
   }
 
   .size-selector {

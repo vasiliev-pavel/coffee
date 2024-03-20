@@ -1,7 +1,11 @@
 <template>
   <div
     class="grid-container"
-    :style="{ 'grid-template-columns': `repeat(${columnsCount}, 1fr)` }"
+    :style="{
+      'grid-auto-columns': `repeat(${columnsCount}, minmax(0, 1fr))`,
+      'grid-template-rows': gridTemplateRows,
+    }"
+    ref="gridContainer"
   >
     <div
       v-for="subCategory in currentCategory.subCategories"
@@ -35,17 +39,32 @@
 <script setup>
 import { computed } from "vue";
 import CupIcon from "~/components/icons/CupIcon.vue";
+import {
+  startDragging,
+  stopDragging,
+  handleDragging,
+} from "~/utils/dragToScroll";
+const gridContainer = ref(null);
 
 const orderStore = useOrderStore();
 
 // Получаем текущую категорию из стора
 const currentCategory = computed(() => orderStore.currentCategory);
 
-// Вычисляем количество столбцов на основе количества подкатегорий в текущей категории
+// Измените вычисление columnsCount, чтобы учитывать новую логику отображения
 const columnsCount = computed(() => {
-  const subCategories = currentCategory.value?.subCategories || [];
-  // Если элементов меньше или равно 6, то должно быть 3 колонки
-  return subCategories.length <= 6 ? Math.min(3, subCategories.length) : "auto";
+  const subCategoriesCount = currentCategory.value?.subCategories.length || 0;
+  if (subCategoriesCount <= 3) {
+    return subCategoriesCount; // 1-3 элемента: кол-во столбцов равно кол-ву элементов
+  } else {
+    return Math.ceil(subCategoriesCount / 2); // Больше 3 элементов: 2 строки
+  }
+});
+
+// Новое вычисляемое свойство для определения количества строк
+const gridTemplateRows = computed(() => {
+  const subCategoriesCount = currentCategory.value?.subCategories.length || 0;
+  return subCategoriesCount <= 3 ? "1fr" : "repeat(2, 1fr)";
 });
 
 // Определяем, выбрана ли подкатегория
@@ -83,6 +102,15 @@ function selectSubCategory(subCategory) {
     );
   }
 }
+onMounted(() => {
+  const element = gridContainer.value;
+  if (element) {
+    element.addEventListener("mousedown", (e) => startDragging(e, element));
+    element.addEventListener("mouseleave", () => stopDragging(element));
+    element.addEventListener("mouseup", () => stopDragging(element));
+    element.addEventListener("mousemove", (e) => handleDragging(e, element));
+  }
+});
 </script>
 
 <style>
@@ -99,10 +127,17 @@ function selectSubCategory(subCategory) {
 }
 
 .grid-container {
-  display: flex;
-  flex-wrap: wrap;
-  overflow-x: auto;
+  display: grid;
+  grid-template-rows: repeat(2, 1fr); /* Two rows */
+  grid-auto-flow: column; /* Automatically place items in columns */
+  /* Adjust the minimum and maximum width as needed */
   gap: 0.5rem;
+  overflow-x: auto; /* Allows horizontal scrolling */
+  scrollbar-width: none; /* For Firefox */
+  -ms-overflow-style: none; /* For Internet Explorer and Edge */
+  padding-left: 2rem;
+  padding-right: 2rem;
+  padding-bottom: 1rem;
 }
 
 .sub-category {
@@ -116,9 +151,11 @@ function selectSubCategory(subCategory) {
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   cursor: pointer;
   transition: 0.1s all;
-  flex: 0 0 auto; /* Важно для предотвращения сжатия элементов при прокрутке */
 }
 
+.grid-container::-webkit-scrollbar {
+  display: none;
+}
 /* .sub-category:hover {
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 } */
