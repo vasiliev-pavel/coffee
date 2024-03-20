@@ -9,6 +9,6 @@
 
 <style>
 html {
-    background-color: #000;
+    background-color: #0a246b;
 }
 </style>

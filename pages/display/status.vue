@@ -47,18 +47,24 @@ definePageMeta({
 </script>
 
 <style>
+@media (min-width: 1024px) and (max-width: 4000px) {
+    .status-display {
+        margin-left: 10rem;
+    }
+}
+
 .status-display {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     height: 95vh;
     overflow: hidden;
+    transition: 0.5s all;
 }
 
 .status-side {
     display: grid;
     grid-column: span 1;
     gap: 1.5rem;
-    margin-left: 10rem;
 
     &>h2 {
         font-weight: bold;

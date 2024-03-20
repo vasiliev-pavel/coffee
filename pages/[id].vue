@@ -2,7 +2,7 @@
   <section class="item-bar">
     <section class="grid grid-cols-1">
       <!-- Левая часть -->
-      <div class="col-span-1 h-[60vh] relative">
+      <div class="col-span-1 h-[64vh] relative">
         <Transition name="fade">
           <CloseIcon v-show="!isExtraContainerVisible" @click="goBack"
             class="absolute top-0 right-0 m-5 z-10 hover:scale-110 active:scale-95 transition duration-150 ease-in-out" />
