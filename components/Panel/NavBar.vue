@@ -12,11 +12,10 @@
 import { ref } from "vue";
 
 const mockpanels = [
-    { name: "Home", path: '/panel', isActive: false, svgPath: "" },
-    { name: "Reports", path: '/panel/reports', isActive: false, svgPath: "" },
-    { name: "Menu", path: '/panel/menu', isActive: false, svgPath: "" },
+    { name: "⌂ Home", path: '/panel', isActive: false, svgPath: "" },
+    { name: "𐚤 Menu", path: '/panel/menu', isActive: false, svgPath: "" },
     { name: "Payments", path: '/panel/payments', isActive: false, svgPath: "" },
-    { name: "Tools", path: '/panel/tools', isActive: false, svgPath: "" },
+    { name: "⚙ Settings", path: '/panel/settings', isActive: false, svgPath: "" },
 ];
 
 
@@ -77,6 +76,6 @@ watch(() => route.path, () => {
 }
 
 .panel-bar>a.is-inactive {
-    color: #a3a3a3;
+    color: #c5c5c5;
 }
 </style>
