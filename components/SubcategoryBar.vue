@@ -10,7 +10,7 @@
     <div
       v-for="subCategory in currentCategory.subCategories"
       :key="subCategory.name"
-      class="sub-category p-5 rounded-2xl"
+      class="sub-category p-2 rounded-2xl"
       :class="{ selected: isSelected(subCategory) }"
       @click="selectSubCategory(subCategory)"
     >
@@ -23,7 +23,7 @@
       />
       <!-- Отображаем CupIcon, если svgPath пустой -->
       <CupIcon v-else class="sub-category-svg" />
-      <div class="item-name text-sm font-semibold">
+      <div class="item-name text-[0.8rem] font-medium">
         {{ subCategory.name }}
       </div>
       <div
