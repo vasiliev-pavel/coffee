@@ -1,7 +1,7 @@
 // каллории подсчитать, все из меню и цены перенести в mock, панель добавления продуктов
 export const extras = [
     {
-        name: "Lid",
+        name: "Lids",
         isActive: false,
         multipleSelectionAllowed: false,
         subCategories: [
