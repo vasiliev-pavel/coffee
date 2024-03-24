@@ -24,7 +24,7 @@
 
           <img
             v-else
-            :src="item.photo"
+            :src="item.imageUrl"
             :alt="item.name"
             class="absolute top-0 h-full w-full object-cover z-0"
           />
@@ -144,8 +144,14 @@
         />
       </div>
 
+      <!-- описание-->
+      <div class="product-card-description"></div>
+
+      <!-- калории-->
+      <div class="product-card-calories"></div>
+
       <!-- хорошо сочетается-->
-      <div class="combination"></div>
+      <div class="product-card-combination"></div>
     </section>
   </section>
 </template>

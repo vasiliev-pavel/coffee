@@ -40,6 +40,7 @@ import { ref } from "vue";
 import { data } from "~/mock.ts";
 
 const orderDetails = useOrderStore();
+const product = useProductsStore();
 
 // Подготовка данных из mock.ts для использования в шаблоне
 const categories = ref({
@@ -54,6 +55,8 @@ const categories = ref({
 
 onMounted(() => {
   orderDetails.clearSelected();
+  product.fetchProductsAndCategories();
+  product.fetchDefaultAvailableAddons();
 });
 </script>
 
