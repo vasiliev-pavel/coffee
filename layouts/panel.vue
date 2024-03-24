@@ -1,14 +1,14 @@
 <template>
-    <header class="container mx-auto px-4">
-        <PanelNavBar />
+    <header>
+        <NuxtLink to="/panel" class="rounded-full p-4 bg-white" />
     </header>
-    <main class="container mx-auto text-white">
+    <main class="container mx-auto px-4 text-white panel">
         <slot />
     </main>
 </template>
 
 <style>
 html {
-    background-color: #e8e8e8;
+    background-color: #0a246b;
 }
 </style>
