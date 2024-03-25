@@ -12,7 +12,7 @@
         </Transition>
         <section>
           <video
-            v-if="item.videoSrc"
+            v-if="item && item.videoSrc"
             autoplay
             muted
             loop
@@ -24,7 +24,7 @@
 
           <img
             v-else
-            :src="item.imageUrl"
+            :src="item.photo"
             :alt="item.name"
             class="absolute top-0 h-full w-full object-cover z-0"
           />
@@ -169,6 +169,7 @@ import {
   stopDragging,
   handleDragging,
 } from "~/utils/dragToScroll";
+
 import { data } from "~/mock.ts";
 definePageMeta({
   layout: "product",
@@ -179,6 +180,7 @@ const router = useRouter();
 const userStore = useUserStore();
 const cartStore = useCart2Store();
 const orderDetails = useOrderStore();
+const productStore = useProductsStore();
 
 const categories = ref(
   mockCategories.map((category) => ({
@@ -244,8 +246,9 @@ const categoriesDisplayInfo = computed(() => {
 });
 
 const item = computed(() => {
-  const items = Object.values(data).flat();
-  return items.find((item) => item.id === parseInt(route.params.id));
+  return productStore.products[route.params.id];
+  // const items = Object.values(data).flat();
+  // return items.find((item) => item.id === parseInt(route.params.id));
 });
 
 const totalItemPrice = computed(() => {

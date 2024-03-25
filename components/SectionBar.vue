@@ -6,9 +6,9 @@
       class="main-section-items grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6"
     >
       <NuxtLink
-        :to="`/${item.id}`"
         v-for="(item, index) in items"
-        :key="item.id"
+        :key="item"
+        :to="`/${item}`"
         class="item rounded-[1.5rem] overflow-hidden"
       >
         <template v-if="index === 0">
@@ -19,8 +19,8 @@
               loop
               playsinline
               class="absolute top-0 left-0 w-full h-full object-cover"
-              :src="item.videoSrc"
-              :alt="item.name"
+              :src="productStore.products[item].videoSrc"
+              :alt="productStore.products[item].name"
             ></video>
             <div class="video-info absolute bottom-0 p-6 w-full">
               <div class="flex items-center">
@@ -30,7 +30,7 @@
                   <PlusIcon />
                 </button>
                 <h3 class="flex text-white font-medium text-3xl ml-5">
-                  ${{ item.price }}
+                  ${{ productStore.products[item].price }}
                 </h3>
               </div>
             </div>
@@ -39,10 +39,18 @@
 
         <template v-else>
           <div class="main-item-container p-5 font-medium font-kanit">
-            <img :src="item.photo" :alt="item.name" class="main-item-image" />
+            <img
+              :src="productStore.products[item].photo"
+              :alt="productStore.products[item].name"
+              class="main-item-image"
+            />
             <div class="main-text-container">
-              <h3 class="main-item-name">{{ item.name }}</h3>
-              <p class="main-item-price text-xl">${{ item.price }}</p>
+              <h3 class="main-item-name">
+                {{ productStore.products[item].name }}
+              </h3>
+              <p class="main-item-price text-xl">
+                ${{ productStore.products[item].price }}
+              </p>
             </div>
           </div>
         </template>
@@ -51,28 +59,25 @@
   </section>
 </template>
 
-<script>
+<script setup>
 import PlusIcon from "~/components/icons/PlusIcon.vue";
-export default {
-  components: {
-    PlusIcon,
+
+const props = defineProps({
+  items: {
+    type: Array,
+    default: () => [],
   },
-  name: "SectionBar",
-  props: {
-    items: {
-      type: Array,
-      default: () => [],
-    },
-    id: {
-      type: [String, Number],
-      default: "",
-    },
-    category: {
-      type: [String, Number],
-      default: "",
-    },
+  id: {
+    type: [String, Number],
+    default: "",
   },
-};
+  category: {
+    type: [String, Number],
+    default: "",
+  },
+});
+
+const productStore = useProductsStore();
 </script>
 
 <style>
