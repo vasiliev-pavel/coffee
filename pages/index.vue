@@ -41,7 +41,7 @@ import { data } from "~/mock.ts";
 
 const orderDetails = useOrderStore();
 const product = useProductsStore();
-
+const addons = useAddOnsStore();
 // Подготовка данных из mock.ts для использования в шаблоне
 const categories = ref({
   hot_coffee: data.hot_coffee,
@@ -56,7 +56,10 @@ const categories = ref({
 onMounted(() => {
   orderDetails.clearSelected();
   product.fetchProductsAndCategories();
-  product.fetchDefaultAvailableAddons();
+  addons.fetchExtras();
+  addons.fetchDefaultExtras();
+  addons.fetchAnAvailableExtras();
+  addons.fetchExtrasInProductCategories();
 });
 </script>
 

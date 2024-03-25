@@ -5,7 +5,6 @@ export const useProductsStore = defineStore('products', {
     state: () => ({
         categories: {},
         products: {},
-        addons:{},
         isLoading: true,
         error: null
     }),
@@ -28,24 +27,6 @@ export const useProductsStore = defineStore('products', {
                 this.isLoading = false;
             }
         },
-        async fetchDefaultAvailableAddons() {
-            this.isLoading = true;
-            try {
-                // Здесь должен быть ваш код для вызова Supabase функции
-                // Например, используя serverSupabaseClient из Nuxt или другой клиентский код
-                const { data, error } = await $fetch(`/api/user/defAvailAdd`);
-                console.log(data)
-                // if (error) throw error;
-
-                // this.categories = data.categories;
-                // this.products = data.products;
-            } catch (error) {
-                console.error(error);
-                this.error = error;
-            } finally {
-                this.isLoading = false;
-            }
-        }
     }
    
 });
