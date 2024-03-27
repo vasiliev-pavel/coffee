@@ -27,9 +27,9 @@ onMounted(() => {
   orderDetails.clearSelected();
   productStore.fetchProductsAndCategories();
   addons.fetchExtras();
-  // addons.fetchDefaultExtras();
-  // addons.fetchAnAvailableExtras();
-  // addons.fetchExtrasInProductCategories();
+  addons.fetchDefaultExtras();
+  addons.fetchAnAvailableExtras();
+  addons.fetchExtrasInProductCategories();
 });
 </script>
 

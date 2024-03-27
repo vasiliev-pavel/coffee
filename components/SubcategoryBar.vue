@@ -8,29 +8,33 @@
     ref="gridContainer"
   >
     <div
-      v-for="subCategory in currentCategory.subCategories"
-      :key="subCategory.name"
+      v-for="subCategoryID in filteredSubCategoryIDs"
+      :key="subCategoryID"
       class="sub-category p-2 rounded-2xl"
-      :class="{ selected: isSelected(subCategory) }"
-      @click="selectSubCategory(subCategory)"
+      :class="{
+        selected: isSelected(subCategoryID),
+      }"
+      @click="selectSubCategory(subCategoryID)"
     >
       <!-- Отображаем изображение, если svgPath не пустой -->
       <img
-        v-if="subCategory.svgPath"
-        :src="subCategory.svgPath"
+        v-if="currentCategory.subCategories[subCategoryID].svgPath"
+        :src="currentCategory.subCategories[subCategoryID].svgPath"
         class="sub-category-svg"
         alt="Subcategory image"
       />
       <!-- Отображаем CupIcon, если svgPath пустой -->
       <CupIcon v-else class="sub-category-svg" />
       <div class="item-name text-[0.8rem] font-medium">
-        {{ subCategory.name }}
+        {{ currentCategory.subCategories[subCategoryID].name }}
       </div>
       <div
         class="price text-xs font-semibold"
-        :class="{ 'price-selected': isSelected(subCategory) }"
+        :class="{
+          'price-selected': isSelected(subCategoryID),
+        }"
       >
-        $ {{ subCategory.price }}
+        $ {{ currentCategory.subCategories[subCategoryID].price }}
       </div>
     </div>
   </div>
@@ -47,13 +51,15 @@ import {
 const gridContainer = ref(null);
 
 const orderStore = useOrderStore();
+const route = useRoute();
 
 // Получаем текущую категорию из стора
-const currentCategory = computed(() => orderStore.currentCategory);
-
+const currentCategory = computed(() => orderStore.currentCategory.category);
+const currentCategoryID = computed(() => orderStore.currentCategory.categoryID);
+const addons = useAddOnsStore();
 // Измените вычисление columnsCount, чтобы учитывать новую логику отображения
 const columnsCount = computed(() => {
-  const subCategoriesCount = currentCategory.value?.subCategories.length || 0;
+  const subCategoriesCount = currentCategory.value?.subCategoryIDs.length || 0;
   if (subCategoriesCount <= 3) {
     return subCategoriesCount; // 1-3 элемента: кол-во столбцов равно кол-ву элементов
   } else {
@@ -63,45 +69,63 @@ const columnsCount = computed(() => {
 
 // Новое вычисляемое свойство для определения количества строк
 const gridTemplateRows = computed(() => {
-  const subCategoriesCount = currentCategory.value?.subCategories.length || 0;
+  const subCategoriesCount = currentCategory.value?.subCategoryIDs.length || 0;
   return subCategoriesCount <= 3 ? "1fr" : "repeat(2, 1fr)";
 });
 
 // Определяем, выбрана ли подкатегория
-function isSelected(subCategory) {
+function isSelected(subCategoryID) {
   return !!orderStore.subCategoriesSelections[currentCategory.value.name]?.[
-    subCategory.name
+    currentCategory.value.subCategories[subCategoryID].name
   ];
 }
 
-function selectSubCategory(subCategory) {
+// Вычисляемый список ID подкатегорий, исключая те, которые не доступны
+const filteredSubCategoryIDs = computed(() => {
+  // Сначала получаем объект недоступных подкатегорий для текущего ID продукта
+  const productUnavailableExtras = addons.anAvailableExtras[route.params.id];
+
+  // Если для текущего продукта есть данные о недоступных подкатегориях,
+  // то берем их по ID текущей категории, иначе пустой массив
+  const unavailableSubCategoryIDs = productUnavailableExtras
+    ? productUnavailableExtras[currentCategoryID.value] || []
+    : [];
+
+  // Фильтруем ID подкатегорий, исключая недоступные
+  return currentCategory.value.subCategoryIDs.filter(
+    (subCategoryID) => !unavailableSubCategoryIDs.includes(subCategoryID)
+  );
+});
+
+function selectSubCategory(subCategoryID) {
   // Определяем, была ли подкатегория выбрана до этого
-  const currentlySelected = isSelected(subCategory);
+  const currentlySelected = isSelected(subCategoryID);
   if (currentCategory.value.multipleSelectionAllowed) {
     // Множественный выбор: переключаем состояние выбранного
     orderStore.selectSubCategory(
       currentCategory.value.name,
-      subCategory.name,
+      currentCategory.value.subCategories[subCategoryID].name,
       !currentlySelected,
-      subCategory.svgPath
+      currentCategory.value.subCategories[subCategoryID].svgPath
     );
   } else {
     // Одиночный выбор: сбрасываем выбор для всех подкатегорий, затем выбираем текущую
-    currentCategory.value.subCategories.forEach((category) => {
+    currentCategory.value.subCategoryIDs.forEach((subCategoryId) => {
       orderStore.selectSubCategory(
         currentCategory.value.name,
-        category.name,
+        currentCategory.value.subCategories[subCategoryId].name,
         false
       );
     });
     orderStore.selectSubCategory(
       currentCategory.value.name,
-      subCategory.name,
+      currentCategory.value.subCategories[subCategoryID].name,
       !currentlySelected,
-      subCategory.svgPath
+      currentCategory.value.subCategories[subCategoryID].svgPath
     );
   }
 }
+
 onMounted(() => {
   const element = gridContainer.value;
   if (element) {
@@ -109,6 +133,26 @@ onMounted(() => {
     element.addEventListener("mouseleave", () => stopDragging(element));
     element.addEventListener("mouseup", () => stopDragging(element));
     element.addEventListener("mousemove", (e) => handleDragging(e, element));
+  }
+  //нужно будет добавить логику что если возвращается из корзины
+  //то уберать дефолт чтобы он не перевыбирал
+  // Проверяем, существуют ли данные по умолчанию для текущего ID продукта
+  const productDefaultExtras = addons.defaultExtras[route.params.id];
+
+  if (productDefaultExtras && productDefaultExtras[currentCategoryID.value]) {
+    const defaultExtras = productDefaultExtras[currentCategoryID.value];
+
+    defaultExtras.forEach((subCategoryID) => {
+      const subCategory = currentCategory.value.subCategories[subCategoryID];
+      if (subCategory) {
+        orderStore.selectSubCategory(
+          currentCategory.value.name,
+          subCategory.name,
+          true, // isSelected
+          subCategory.svgPath
+        );
+      }
+    });
   }
 });
 </script>

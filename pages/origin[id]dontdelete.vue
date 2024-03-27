@@ -68,24 +68,46 @@
         <div class="scroll-container">
           <div class="extra-bar-inner" ref="extraBarInner">
             <div
-              v-for="categoryID in categoryIdsForProduct"
-              :key="categoryID"
-              @click="selectCategory(categoryID)"
+              v-for="categoryInfo in categoriesDisplayInfo"
+              :key="categoryInfo.name"
+              @click="selectCategory(categoryInfo.name)"
+              :class="{
+                'is-active': categoryInfo.isActive,
+                'is-inactive': !categoryInfo.isActive,
+              }"
               class="category-item"
             >
               <div class="relative">
-                <CupIcon class="category-icon" />
+                <div
+                  v-if="categoryInfo.displayIcons.some((iconPath) => iconPath)"
+                  class="flex flex-col items-center justify-center"
+                >
+                  <div
+                    v-show="categoryInfo.additionalCount > 0"
+                    class="additional-count"
+                  >
+                    +{{ categoryInfo.additionalCount }}
+                  </div>
+                  <div class="flex flex-row items-center justify-center">
+                    <img
+                      v-for="(iconPath, index) in categoryInfo.displayIcons"
+                      v-if="iconPath !== ''"
+                      :key="index"
+                      :src="iconPath"
+                      class="category-icon"
+                    />
+                  </div>
+                </div>
+                <CupIcon v-else class="category-icon" />
               </div>
 
-              <div class="category-name">
-                {{ addons.extras[categoryID].name }}
-              </div>
+              <div class="category-name">{{ categoryInfo.displayText }}</div>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Контейнер с выбором дополнений -->
+      <!-- Контейнер с выбором -->
       <div
         class="extra-container-product"
         :class="{ 'is-visible': isExtraContainerVisible }"
@@ -115,8 +137,8 @@
         <SubcategoryBar
           v-if="
             currentCategory &&
-            currentCategory.subCategoryIDs &&
-            currentCategory.subCategoryIDs.length > 0
+            currentCategory.subCategories &&
+            currentCategory.subCategories.length > 0
           "
           class="mt-16"
         />
@@ -170,8 +192,11 @@ const categories = ref(
 
 const extraBar = ref(null);
 const extraBarInner = ref(null);
-const currentCategory = computed(() => orderDetails.currentCategory?.category);
+const currentCategory = computed(() => orderDetails.currentCategory);
 const isExtraContainerVisible = ref(false); // по умолчанию скрыт
+const categoryIdsForProduct = ref(
+  addons.extrasAndProductCategories[item.categoryId] || []
+);
 
 onMounted(() => {
   if (extraBarInner.value) {
@@ -189,7 +214,6 @@ onMounted(() => {
     );
     extraBarInner.value.addEventListener("wheel", handleWheelEvent);
   }
-  // console.log(categoryIdsForProduct);
 });
 
 const categoriesDisplayInfo = computed(() => {
@@ -233,10 +257,6 @@ const item = computed(() => {
   // const items = Object.values(data).flat();
   // return items.find((item) => item.id === parseInt(route.params.id));
 });
-
-const categoryIdsForProduct = ref(
-  addons.extrasAndProductCategories[item.value.categoryID] || []
-);
 
 const totalItemPrice = computed(() => {
   let totalPrice = item.value.price; // Базовая цена товара
@@ -311,28 +331,25 @@ const increment = () => {
   }
 };
 
-const selectCategory = (categoryID) => {
-  const category = addons.extras[categoryID];
+const selectCategory = (categoryName) => {
+  const category = categories.value.find((c) => c.name === categoryName);
 
   // Переключение видимости extra-container и обновление активных состояний
-  if (currentCategory.value && currentCategory.value.name === category.name) {
+  if (currentCategory.value && currentCategory.value.name === categoryName) {
     isExtraContainerVisible.value = !isExtraContainerVisible.value;
     if (!isExtraContainerVisible.value) {
       orderDetails.updateCurrentCategory(null);
       // currentCategory.value = null;
-      // categories.value.forEach((cat) => (cat.isActive = false));
+      categories.value.forEach((cat) => (cat.isActive = false));
     }
   } else {
     isExtraContainerVisible.value = true;
-    orderDetails.updateCurrentCategory({
-      categoryID: categoryID,
-      category: category,
-    });
+    orderDetails.updateCurrentCategory(category);
 
     // currentCategory.value = category;
-    // categories.value.forEach(
-    //   (cat) => (cat.isActive = cat.name === categoryName)
-    // );
+    categories.value.forEach(
+      (cat) => (cat.isActive = cat.name === categoryName)
+    );
   }
 };
 
