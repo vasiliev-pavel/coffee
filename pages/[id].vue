@@ -52,23 +52,30 @@
                 </h3>
               </div>
 
-              <SizeSelector />
+              <SizeSelector v-show="categoryIdsForProduct.length > 0" />
             </div>
           </div>
         </section>
       </div>
 
       <!-- Правая часть -->
-      <div class="px-5 font-medium text-xl text-[#4A4949]">
+      <div
+        v-show="categoryIdsForProduct.length > 0"
+        class="px-5 font-medium text-xl text-[#4A4949]"
+      >
         customize as you like it
       </div>
 
       <!-- Выбор категории дополнений-->
-      <div class="extra-bar" ref="extraBar">
+      <div
+        v-show="categoryIdsForProduct.length > 0"
+        class="extra-bar"
+        ref="extraBar"
+      >
         <div class="scroll-container">
           <div class="extra-bar-inner" ref="extraBarInner">
             <div
-              v-for="categoryID in categoryIdsForProduct"
+              v-for="(categoryID, index) in categoryIdsForProduct"
               :key="categoryID"
               @click="selectCategory(categoryID)"
               class="category-item"
@@ -123,7 +130,14 @@
       </div>
 
       <!-- описание-->
-      <div class="product-card-description"></div>
+      <div class="product-card-description leading-1">
+        <span
+          >Lorem Ipsum is simply dummy text of the printing and typesetting
+          industry. Lorem Ipsum has been the industry's standard dummy text ever
+          since the 1500s, when an unknown printer took a galley of type and
+          scrambled it to make a type specimen book.
+        </span>
+      </div>
 
       <!-- калории-->
       <div class="product-card-calories"></div>
@@ -298,6 +312,7 @@ const increment = () => {
     size: orderDetails.selectedSize, // Выбранный размер
     extras: allSelectedExtras, // Группированные выбранные дополнения по категориям
     totalPrice: totalItemPrice.value,
+    itemID: route.params.id,
   };
 
   // Добавляем товар в корзину через Pinia store
@@ -309,6 +324,7 @@ const increment = () => {
     router.push(`/cart`);
     cartStore.clearIsUpdate();
   }
+  userStore.setUserMadeSelection(false);
 };
 
 const selectCategory = (categoryID) => {
@@ -351,9 +367,24 @@ const handleWheelEvent = (event) => {
   extraBarInner.value.scrollLeft += deltaY + deltaX;
   event.preventDefault(); // Предотвратить стандартное поведение прокрутки
 };
+
+watch(isExtraContainerVisible, (newValue) => {
+  if (newValue) {
+    // Если переменная равна true, отключаем скролл
+    document.body.style.overflow = "hidden";
+  } else {
+    // В противном случае возвращаем возможность скролла
+    document.body.style.overflow = "";
+  }
+});
 </script>
 
 <style>
+.product-card-description {
+  padding: 0 1.25rem;
+  font-size: 1.125rem /* 18px */;
+}
+
 @media (min-width: 640px) and (max-width: 1024px) {
   .item-bar {
     width: 70%;
@@ -431,6 +462,7 @@ const handleWheelEvent = (event) => {
 
 .scroll-container {
   padding-top: 1.25rem;
+  padding-bottom: 1.25rem;
   overflow-x: auto;
 }
 

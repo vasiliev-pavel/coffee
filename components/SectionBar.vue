@@ -23,13 +23,16 @@
               :alt="productStore.products[item].name"
             ></video>
             <div class="video-info absolute bottom-0 p-6 w-full">
+              <h3 class="font-medium text-3xl mb-1 text-[#ffffff]">
+                {{ productStore.products[item].name }}
+              </h3>
               <div class="flex items-center">
-                <button
+                <!-- <button
                   class="bg-blue-500 hover:bg-blue-700 text-white font-bold p-4 rounded-full"
                 >
                   <PlusIcon />
-                </button>
-                <h3 class="flex text-white font-medium text-3xl ml-5">
+                </button> -->
+                <h3 class="flex text-[#ffffff] font-medium text-3xl">
                   ${{ productStore.products[item].price }}
                 </h3>
               </div>

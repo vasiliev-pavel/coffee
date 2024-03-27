@@ -51,6 +51,7 @@ import {
 const gridContainer = ref(null);
 
 const orderStore = useOrderStore();
+const userStore = useUserStore();
 const route = useRoute();
 
 // Получаем текущую категорию из стора
@@ -124,6 +125,7 @@ function selectSubCategory(subCategoryID) {
       currentCategory.value.subCategories[subCategoryID].svgPath
     );
   }
+  userStore.setUserMadeSelection(true);
 }
 
 onMounted(() => {
@@ -134,25 +136,32 @@ onMounted(() => {
     element.addEventListener("mouseup", () => stopDragging(element));
     element.addEventListener("mousemove", (e) => handleDragging(e, element));
   }
-  //нужно будет добавить логику что если возвращается из корзины
-  //то уберать дефолт чтобы он не перевыбирал
-  // Проверяем, существуют ли данные по умолчанию для текущего ID продукта
-  const productDefaultExtras = addons.defaultExtras[route.params.id];
+});
 
-  if (productDefaultExtras && productDefaultExtras[currentCategoryID.value]) {
-    const defaultExtras = productDefaultExtras[currentCategoryID.value];
+watchEffect(() => {
+  // Убедитесь, что текущая категория и список подкатегорий загружены
+  if (currentCategory.value && currentCategory.value.subCategoryIDs) {
+    // Проверяем, сделал ли пользователь уже выбор. Если нет, применяем значения по умолчанию
+    if (!userStore.userMadeSelection) {
+      const productDefaultExtras = addons.defaultExtras[route.params.id];
+      const defaultExtras =
+        productDefaultExtras && productDefaultExtras[currentCategoryID.value];
 
-    defaultExtras.forEach((subCategoryID) => {
-      const subCategory = currentCategory.value.subCategories[subCategoryID];
-      if (subCategory) {
-        orderStore.selectSubCategory(
-          currentCategory.value.name,
-          subCategory.name,
-          true, // isSelected
-          subCategory.svgPath
-        );
+      if (defaultExtras) {
+        defaultExtras.forEach((subCategoryID) => {
+          const subCategory =
+            currentCategory.value.subCategories[subCategoryID];
+          if (subCategory) {
+            orderStore.selectSubCategory(
+              currentCategory.value.name,
+              subCategory.name,
+              true, // isSelected
+              subCategory.svgPath
+            );
+          }
+        });
       }
-    });
+    }
   }
 });
 </script>

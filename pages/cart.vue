@@ -60,6 +60,7 @@ import { computed } from "vue";
 
 const cartStore = useCart2Store();
 const orderDetails = useOrderStore();
+const userStore = useUserStore();
 
 const cartItems = computed(() => cartStore.items);
 const router = useRouter();
@@ -80,8 +81,8 @@ function handleItemClick(item, index) {
       );
     });
   });
-
-  router.push(`/${item.id}`);
+  userStore.setUserMadeSelection(true);
+  router.push(`/${item.itemID}`);
 }
 
 const confirmPay = async () => {
